@@ -1,0 +1,17 @@
+# Suite "small": every instance has ≤ 720 candidate assignments so the exact optimum is
+# available and approx_ratio is defined. Used from W3 to validate the QUBO and
+# to measure greedy's approximation ratio; later for QAOA (≤ ~25 vars).
+name: small
+nodes: [6, 8, 10]
+agents: [2, 3]
+densities: [0.0, 0.3, 0.6]
+seeds: { start: 1, count: 10 }
+budget_ms: 120
+brute_force_max_candidates: 200000
+vision_hops: 2
+weights:
+  coverage: 1.0
+  redundancy: 0.5
+  flanking: 1.0
+  cover: 0.5
+  distance: 0.1

@@ -1,0 +1,16 @@
+# Suite "medium": the in-game regime (20–60 nodes, 4–8 agents). Exact optimum only
+# for n=20,a=4 (116k assignments); otherwise objective value + latency. W5–W8.
+name: medium
+nodes: [20, 40, 60]
+agents: [4, 6, 8]
+densities: [0.0, 0.3, 0.6]
+seeds: { start: 1, count: 30 }
+budget_ms: 120
+brute_force_max_candidates: 200000
+vision_hops: 2
+weights:
+  coverage: 1.0
+  redundancy: 0.5
+  flanking: 1.0
+  cover: 0.5
+  distance: 0.1

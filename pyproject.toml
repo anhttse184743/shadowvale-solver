@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "svl-solver"
+version = "0.1.0"
+description = "ShadowVale Enemy Coordination Engine: QUBO formulation, classical and quantum-inspired solvers, benchmark harness, and the localhost sidecar API used by the Unity client."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "ShadowVale team (SEP490 RBL)" }]
+dependencies = [
+    "numpy>=1.26",
+    "networkx>=3.2",
+    "dimod>=0.12",
+    "dwave-neal>=0.6",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+    "pyinstaller>=6.5",
+]
+# Qiskit is heavy (~500 MB with Aer). Only needed for the QAOA solver (W9).
+quantum = [
+    "qiskit>=1.0",
+    "qiskit-aer>=0.14",
+    "qiskit-optimization>=0.6",
+]
+plots = [
+    "matplotlib>=3.8",
+    "pandas>=2.2",
+    "scipy>=1.12",
+]
+
+[project.scripts]
+svl-bench = "svl_solver.cli:bench_main"
+svl-api = "svl_solver.cli:api_main"
+
+[tool.setuptools.packages.find]
+include = ["svl_solver*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

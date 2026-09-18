@@ -1,0 +1,17 @@
+# Suite "full": the complete scalability grid from the proposal
+# (20–100 nodes × 4–12 agents × 3 chokepoint densities × 30 seeds = 1350 instances).
+# Run overnight from W9 with scripts/run_overnight.ps1; resumable.
+name: full
+nodes: [20, 40, 60, 80, 100]
+agents: [4, 8, 12]
+densities: [0.0, 0.3, 0.6]
+seeds: { start: 1, count: 30 }
+budget_ms: 120
+brute_force_max_candidates: 200000
+vision_hops: 2
+weights:
+  coverage: 1.0
+  redundancy: 0.5
+  flanking: 1.0
+  cover: 0.5
+  distance: 0.1
