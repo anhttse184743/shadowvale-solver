@@ -4,9 +4,8 @@ can skip them cleanly; calling ``solve`` raises NotImplementedError with the
 week they are due.
 
     genetic       classical baseline 2            → P2  (W3–W4)
-    sa_classical  classical simulated annealing   → P2  (W3–W4)
-    sqa           simulated quantum annealing     → P4  (W8)   dwave-neal
-    qiea          quantum-inspired evolutionary   → P4  (W8)   Han & Kim 2002
+    sa_classical  classical simulated annealing   → P2  (W3–W4)  dwave-neal (neal is CLASSICAL SA)
+    sqa           simulated quantum annealing     → P4  (W8)   path-integral Monte Carlo, NOT neal
     qaoa          QAOA on Qiskit Aer, p = 1..3    → P4  (W9)   instances ≤ ~25 vars
     qpu           real D-Wave QPU feasibility     → stretch
 """
@@ -38,15 +37,10 @@ class ClassicalAnnealingSolver(_Planned):
 
 
 class SimulatedQuantumAnnealingSolver(_Planned):
-    """dwave-neal SimulatedAnnealingSampler over to_ising(problem)."""
+    """Path-integral Monte Carlo: P Trotter replicas coupled by a decaying
+    transverse field Γ. Must not reuse dwave-neal, which is classical SA
+    (that is the ``sa`` baseline) — otherwise sa and sqa would be one algorithm."""
     variant_id = "sqa"
-    due = "P4 (W8)"
-
-
-class QuantumInspiredEvolutionarySolver(_Planned):
-    """Han & Kim (2002): population of Q-bits (α, β), observe → bitstring,
-    rotate toward the best observed solution with a Q-gate lookup table."""
-    variant_id = "qiea"
     due = "P4 (W8)"
 
 

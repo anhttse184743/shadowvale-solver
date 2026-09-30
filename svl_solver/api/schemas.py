@@ -42,6 +42,9 @@ class CoordinationPlan(BaseModel):
     energy: float = 0.0
     fallback_reason: str | None = None
     instance_id: str = ""
+    # Sampler metrics (sqa / qiea / qaoa); 0 for constructive solvers like greedy.
+    samples_evaluated: int = 0
+    raw_feasible_samples: int = 0
 
 
 class VariantInfo(BaseModel):

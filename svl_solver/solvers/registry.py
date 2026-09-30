@@ -6,11 +6,11 @@ from __future__ import annotations
 from .base import Solver
 from .brute_force import BruteForceSolver
 from .greedy import GreedySolver
+from .qiea import QuantumInspiredEvolutionarySolver
 from .planned import (
     GeneticSolver,
     ClassicalAnnealingSolver,
     SimulatedQuantumAnnealingSolver,
-    QuantumInspiredEvolutionarySolver,
     QaoaAerSolver,
     DWaveQpuSolver,
 )

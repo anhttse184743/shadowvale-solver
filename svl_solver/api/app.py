@@ -83,6 +83,8 @@ def create_app() -> FastAPI:
             energy=sol.energy,
             fallback_reason=fallback_reason,
             instance_id=req.instance_id,
+            samples_evaluated=int(sol.meta.get("samples_evaluated", 0)),
+            raw_feasible_samples=int(sol.meta.get("raw_feasible_samples", 0)),
         )
 
     return app

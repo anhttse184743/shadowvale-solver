@@ -44,19 +44,24 @@ class Solver(ABC):
     available: bool = True            # False for planned-but-not-implemented variants
 
     @abstractmethod
-    def _solve(self, problem: QuboProblem, budget_ms: int | None, rng: np.random.Generator) -> np.ndarray:
-        """Return a bit-vector of length problem.n_vars."""
+    def _solve(self, problem: QuboProblem, budget_ms: int | None,
+               rng: np.random.Generator) -> np.ndarray | tuple[np.ndarray, dict]:
+        """Return a bit-vector of length problem.n_vars, optionally with a meta dict
+        (samplers report ``samples_evaluated`` / ``raw_feasible_samples`` there)."""
 
     def solve(self, problem: QuboProblem, budget_ms: int | None = None,
               seed: int | None = None) -> Solution:
         rng = np.random.default_rng(seed)
         t0 = time.perf_counter()
-        x = np.asarray(self._solve(problem, budget_ms, rng), dtype=np.int8).ravel()
+        out = self._solve(problem, budget_ms, rng)
         latency = (time.perf_counter() - t0) * 1000.0
+        meta: dict = {}
+        if isinstance(out, tuple):
+            out, meta = out[0], dict(out[1])
+        x = np.asarray(out, dtype=np.int8).ravel()
         if x.shape[0] != problem.n_vars:
             raise RuntimeError(f"{self.variant_id} returned {x.shape[0]} bits, expected {problem.n_vars}")
         assignment, feasible = decode(problem, x)
-        meta: dict = {}
         if not feasible:
             assignment = greedy_repair(problem, x)
             meta["repaired"] = True
