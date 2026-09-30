@@ -19,7 +19,10 @@ class QuboRequest(BaseModel):
     q_matrix: list[float] = Field(description="row-major (agent_count*node_count)^2 upper-triangular or symmetric")
     offset: float = 0.0
     weight_coverage: float = 1.0
+    weight_redundancy: float = 0.5
     weight_flanking: float = 1.0
+    weight_cover: float = 0.5
+    weight_distance: float = 0.1
     penalty_conflict: float = 0.0
     latency_budget_ms: int = Field(default=120, gt=0)
     variant: str = "greedy"
