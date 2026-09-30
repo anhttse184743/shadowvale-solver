@@ -5,6 +5,8 @@
     svl-bench summary experiments/results/small.csv
     svl-bench list
     svl-bench gen  --seed 1 --nodes 12 --agents 4 --density 0.3 --out inst.json
+    svl-bench game coordination-*.jsonl --solvers greedy,sa,sqa,qiea --repeats 5 --out experiments/results/game.csv
+    svl-bench compare experiments/results/game.csv --a sqa --b sa --metric energy
     svl-api        --port 8001
 """
 
@@ -18,7 +20,10 @@ from pathlib import Path
 
 from .bench.metrics import summarize
 from .bench.runner import run_suite
+from .bench.stats import compare
+from .instances.game_records import load_records
 from .instances.generator import generate
+from .instances.suite import SuiteSpec
 from .instances.io import save_instance, to_qubo_request
 from .instances.suite import BUILTIN_SUITES, load_suite
 from .solvers.registry import list_variants
@@ -66,6 +71,28 @@ def _cmd_gen(a: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_game(a: argparse.Namespace) -> int:
+    records = load_records(a.records)
+    spec = SuiteSpec(name="game", nodes=[], agents=[], densities=[], seeds=[], budget_ms=a.budget_ms,
+                     brute_force_max_candidates=a.brute_max)
+    solvers = [s for s in a.solvers.split(",") if s]
+    rows = run_suite(spec, solvers, repeats=a.repeats, out=a.out, budget_ms=a.budget_ms,
+                     resume=not a.no_resume, progress=None if a.quiet else print, instances=records)
+    print(f"{len(records)} recorded game instances -> wrote {len(rows)} new rows to {a.out}")
+    return 0
+
+
+def _cmd_compare(a: argparse.Namespace) -> int:
+    with open(a.csv, newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    r = compare(rows, a.a, a.b, metric=a.metric)
+    print(f"{r['metric']}: {r['a']} mean={r['mean_a']:.4f} median={r['median_a']:.4f} (n={r['n_a']}) vs "
+          f"{r['b']} mean={r['mean_b']:.4f} median={r['median_b']:.4f} (n={r['n_b']})")
+    print(f"  {r['test']}: statistic={r['statistic']:.1f} p={r['p_value']:.4g}  "
+          f"mean diff={r['mean_diff']:.4f}  95% CI [{r['ci95_diff'][0]:.4f}, {r['ci95_diff'][1]:.4f}]")
+    return 0
+
+
 def bench_main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="svl-bench", description="ShadowVale solver benchmark")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -97,6 +124,24 @@ def bench_main(argv: list[str] | None = None) -> None:
     ge.add_argument("--request", action="store_true", help="write a QuboRequest instead of a raw instance")
     ge.add_argument("--out", default="instance.json")
     ge.set_defaults(fn=_cmd_gen)
+
+    gm = sub.add_parser("game", help="benchmark instances recorded inside the game (JSONL)")
+    gm.add_argument("records", nargs="+")
+    gm.add_argument("--solvers", default="greedy,ga,sa,sqa,qiea")
+    gm.add_argument("--repeats", type=int, default=3)
+    gm.add_argument("--budget-ms", type=int, default=120)
+    gm.add_argument("--brute-max", type=int, default=200_000)
+    gm.add_argument("--out", default="experiments/results/game.csv")
+    gm.add_argument("--no-resume", action="store_true")
+    gm.add_argument("--quiet", action="store_true")
+    gm.set_defaults(fn=_cmd_game)
+
+    c = sub.add_parser("compare", help="paired significance test between two solvers in a results CSV")
+    c.add_argument("csv")
+    c.add_argument("--a", required=True)
+    c.add_argument("--b", required=True)
+    c.add_argument("--metric", default="gap")
+    c.set_defaults(fn=_cmd_compare)
 
     a = p.parse_args(argv)
     sys.exit(a.fn(a))

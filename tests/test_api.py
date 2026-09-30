@@ -30,7 +30,8 @@ def test_health(client):
 def test_variants_lists_planned_and_available(client):
     ids = {v["id"]: v for v in client.get("/variants").json()}
     assert ids["greedy"]["available"] is True
-    assert ids["qaoa"]["available"] is False and ids["qaoa"]["family"] == "quantum_inspired"
+    assert ids["qaoa"]["available"] is True and ids["qaoa"]["family"] == "quantum_inspired"
+    assert ids["qpu"]["available"] is False
 
 
 def test_solve_returns_feasible_plan(client):
@@ -49,10 +50,17 @@ def test_solve_returns_feasible_plan(client):
 
 
 def test_unknown_variant_falls_back_to_greedy(client):
-    _, req = _request(variant="qaoa")
+    _, req = _request(variant="qpu")
     plan = client.post("/solve", json=req).json()
     assert plan["solver_variant_id"] == "greedy"
     assert "unavailable" in plan["fallback_reason"]
+
+
+def test_qaoa_beyond_the_statevector_limit_falls_back_with_the_reason(client):
+    _, req = _request(n=12, a=4, variant="qaoa")          # 48 qubits
+    plan = client.post("/solve", json=req).json()
+    assert plan["solver_variant_id"] == "greedy"
+    assert "qubits" in plan["fallback_reason"]
 
 
 def test_brute_variant_on_small_instance_beats_or_equals_greedy(client):

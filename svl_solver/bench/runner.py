@@ -104,7 +104,9 @@ def run_suite(spec: SuiteSpec, solvers: Iterable[str], repeats: int = 1,
         if write_header:
             w.writeheader()
         for inst in (instances if instances is not None else iter_instances(spec)):
-            problem = build_qubo(inst, spec.weights)
+            # Recorded game instances carry the weights the game used.
+            weights = getattr(inst, "weights", None) or spec.weights
+            problem = build_qubo(inst, weights)
             dens = _density_of(inst)
             opt_e, opt_f = _optimum(inst, problem, spec.brute_force_max_candidates, opt_cache)
             for sname in solvers:

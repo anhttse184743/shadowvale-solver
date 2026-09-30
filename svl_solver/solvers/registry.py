@@ -5,15 +5,13 @@ from __future__ import annotations
 
 from .base import Solver
 from .brute_force import BruteForceSolver
+from .ga import GeneticSolver
 from .greedy import GreedySolver
+from .planned import DWaveQpuSolver
+from .qaoa import QaoaSolver
 from .qiea import QuantumInspiredEvolutionarySolver
-from .planned import (
-    GeneticSolver,
-    ClassicalAnnealingSolver,
-    SimulatedQuantumAnnealingSolver,
-    QaoaAerSolver,
-    DWaveQpuSolver,
-)
+from .sa import ClassicalAnnealingSolver
+from .sqa import SimulatedQuantumAnnealingSolver
 
 REGISTRY: dict[str, type[Solver]] = {
     "greedy": GreedySolver,
@@ -22,7 +20,7 @@ REGISTRY: dict[str, type[Solver]] = {
     "sa": ClassicalAnnealingSolver,
     "sqa": SimulatedQuantumAnnealingSolver,
     "qiea": QuantumInspiredEvolutionarySolver,
-    "qaoa": QaoaAerSolver,
+    "qaoa": QaoaSolver,
     "qpu": DWaveQpuSolver,
 }
 
