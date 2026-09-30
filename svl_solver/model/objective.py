@@ -8,7 +8,7 @@ every feasible assignment of small instances.
 F(σ) =   w_cov   Σ_a cov[σ(a)]
        − w_red   Σ_{a<b} overlap[σ(a), σ(b)]
        + w_flank Σ_{a<b} flank[σ(a), σ(b)]
-       + w_cover Σ_a is_cover[σ(a)]
+       + w_cover Σ_a cover_q[σ(a)]
        − w_dist  Σ_a dist[a, σ(a)]
 
 Higher is better. Solvers minimise the QUBO energy E = −F + penalties.
@@ -29,7 +29,7 @@ def objective_terms(inst: Instance, assignment: Sequence[int]) -> dict[str, floa
     s = [int(v) for v in assignment]
 
     coverage = float(sum(inst.cov[s[a]] for a in range(A)))
-    cover = float(sum(inst.is_cover[s[a]] for a in range(A)))
+    cover = float(sum(inst.cover_q[s[a]] for a in range(A)))
     distance = float(sum(inst.dist[a, s[a]] for a in range(A)))
 
     redundancy = 0.0

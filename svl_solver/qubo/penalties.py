@@ -7,7 +7,7 @@ tests/test_penalty_dominates.py checks exhaustively on small instances).
 
 Per-variable magnitudes of the objective F (all ≥ 0):
 
-    L  = max_n ( w_cov·cov[n] + w_cover·is_cover[n] )   largest positive linear gain
+    L  = max_n ( w_cov·cov[n] + w_cover·cover_q[n] )    largest positive linear gain
     D  = w_dist · max dist[a,n]                          largest linear cost
     P+ = w_flank · max flank[n,m]                        largest positive pair gain
     P− = w_red   · max overlap[n,m]                      largest pair cost
@@ -37,7 +37,7 @@ from ..model.instance import Instance, Weights
 def penalty_bound_terms(inst: Instance, w: Weights | None = None) -> dict[str, float]:
     w = w or Weights()
     A = inst.n_agents
-    L = float((w.coverage * inst.cov + w.cover * inst.is_cover).max())
+    L = float((w.coverage * inst.cov + w.cover * inst.cover_q).max())
     D = float(w.distance * inst.dist.max())
     P_plus = float(w.flanking * inst.flank.max()) if A > 1 else 0.0
     P_minus = float(w.redundancy * inst.overlap.max()) if A > 1 else 0.0

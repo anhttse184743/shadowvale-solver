@@ -14,8 +14,9 @@ Construction
    Higher density → sparser graph → more chokepoints, which is exactly the
    regime where coordination matters.
 5. player: random node. escape routes: sampled among the farthest third of
-   nodes (by hops). cover: ~30 % of nodes. agents: distinct nodes at least
-   2 hops from the player when possible.
+   nodes (by hops). cover: ~30 % of nodes, each with a random facing (drawn
+   last, so every other field is unchanged by it). agents: distinct nodes at
+   least 2 hops from the player when possible.
 """
 
 from __future__ import annotations
@@ -96,6 +97,7 @@ def generate(seed: int, n_nodes: int, n_agents: int, chokepoint_density: float =
     if len(pool) < n_agents:
         pool = [i for i in range(n_nodes) if i != player]
     agents = [int(v) for v in rng.choice(pool, size=n_agents, replace=False)]
+    facing = (rng.random(n_nodes) * 360.0).tolist()
 
     return Instance(
         instance_id=instance_id_for(n_nodes, n_agents, chokepoint_density, seed),
@@ -108,4 +110,5 @@ def generate(seed: int, n_nodes: int, n_agents: int, chokepoint_density: float =
         cover_nodes=cover,
         escape_routes=escape,
         vision_hops=vision_hops,
+        cover_facing=facing,
     )

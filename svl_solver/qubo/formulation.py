@@ -12,7 +12,7 @@ quadratic in x:
     F(x) =  w_cov   Σ_{a,n} cov[n]·x[a,n]
           − w_red   Σ_{a<b} Σ_{n≠m} overlap[n,m]·x[a,n]·x[b,m]
           + w_flank Σ_{a<b} Σ_{n≠m} flank[n,m]·x[a,n]·x[b,m]
-          + w_cover Σ_{a,n} is_cover[n]·x[a,n]
+          + w_cover Σ_{a,n} cover_q[n]·x[a,n]
           − w_dist  Σ_{a,n} dist[a,n]·x[a,n]
 
 Expanding (C1) with x² = x:
@@ -96,7 +96,7 @@ def build_qubo(inst: Instance, w: Weights | None = None, lam: float | None = Non
         for node in range(N):
             i = var_index(a, node, N)
             lin_obj = (w.coverage * inst.cov[node]
-                       + w.cover * inst.is_cover[node]
+                       + w.cover * inst.cover_q[node]
                        - w.distance * inst.dist[a, node])
             Q[i, i] = -lin_obj - lam
 

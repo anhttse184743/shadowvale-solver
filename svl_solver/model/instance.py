@@ -11,6 +11,9 @@ the QUBO builder and the reference objective read the *same* numbers:
     overlap[n,m]  how many escape-route nodes are visible from BOTH n and m
     flank[n,m]    in [0,1]; 1 when n and m sit on opposite sides of the player
     is_cover[n]   1 if n is a cover node
+    cover_q[n]    in [0,1]: is_cover · max(0, cos(facing[n], direction n→player)) — cover
+                  only counts when it stands between the node and the player. Without
+                  facings (``cover_facing=None``) it equals is_cover.
     dist[a,n]     travel cost (graph hops) for agent a to reach node n
 
 Visibility v1 is a graph-hop radius (``vision_hops``): node i sees node j when
@@ -66,6 +69,9 @@ class Instance:
     escape_routes: list[int]
     vision_hops: int = 2
     unreachable_cost: float = 1e3    # dist for nodes not reachable by an agent
+    # Per node, the world yaw (degrees; 0 = +y, 90 = +x, as Unity's yaw over x/z) of the side its
+    # cover protects from. Ignored for non-cover nodes. None → every cover counts fully.
+    cover_facing: list[float] | None = None
 
     # ---- derived (filled by __post_init__) ----
     graph: nx.Graph = field(init=False, repr=False)
@@ -74,6 +80,7 @@ class Instance:
     overlap: np.ndarray = field(init=False, repr=False)   # (n, n)
     flank: np.ndarray = field(init=False, repr=False)     # (n, n)
     is_cover: np.ndarray = field(init=False, repr=False)  # (n,)
+    cover_q: np.ndarray = field(init=False, repr=False)   # (n,)
     dist: np.ndarray = field(init=False, repr=False)      # (n_agents, n)
 
     def __post_init__(self) -> None:
@@ -82,6 +89,8 @@ class Instance:
         self.cover_nodes = sorted({int(c) for c in self.cover_nodes})
         self.escape_routes = sorted({int(e) for e in self.escape_routes})
         self.edges = [(int(u), int(v)) for u, v in self.edges]
+        if self.cover_facing is not None:
+            self.cover_facing = [float(f) for f in self.cover_facing]
 
         g = nx.Graph()
         g.add_nodes_from(range(self.n_nodes))
@@ -117,6 +126,8 @@ class Instance:
         for c in self.cover_nodes + self.escape_routes:
             if not (0 <= c < n):
                 raise ValueError("cover/escape node out of range")
+        if self.cover_facing is not None and len(self.cover_facing) != n:
+            raise ValueError("cover_facing needs one yaw per node")
         for u, v in self.edges:
             if not (0 <= u < n and 0 <= v < n):
                 raise ValueError("edge endpoint out of range")
@@ -138,6 +149,7 @@ class Instance:
 
         self.is_cover = np.zeros(n, dtype=float)
         self.is_cover[self.cover_nodes] = 1.0
+        self.cover_q = _cover_quality(self.pos, self.player_node, self.is_cover, self.cover_facing)
 
         self.flank = _flank_matrix(self.pos, self.player_node)
 
@@ -162,6 +174,7 @@ class Instance:
             "escape_routes": list(map(int, self.escape_routes)),
             "vision_hops": int(self.vision_hops),
             "unreachable_cost": float(self.unreachable_cost),
+            "cover_facing": None if self.cover_facing is None else [round(f, 6) for f in self.cover_facing],
         }
 
     @staticmethod
@@ -178,6 +191,7 @@ class Instance:
             escape_routes=list(d.get("escape_routes", [])),
             vision_hops=int(d.get("vision_hops", 2)),
             unreachable_cost=float(d.get("unreachable_cost", 1e3)),
+            cover_facing=d.get("cover_facing"),
         )
 
 
@@ -206,6 +220,22 @@ def _flank_matrix(pos: np.ndarray, player: int) -> np.ndarray:
     f[:, ~ok] = 0.0
     np.fill_diagonal(f, 0.0)
     return np.clip(f, 0.0, 1.0)
+
+
+def _cover_quality(pos: np.ndarray, player: int, is_cover: np.ndarray,
+                   facing: list[float] | None) -> np.ndarray:
+    """is_cover · max(0, cos θ), θ between the cover's facing and the direction to the
+    player. A node on the player's own spot has no direction and keeps is_cover."""
+    if facing is None:
+        return is_cover.copy()
+    yaw = np.radians(np.asarray(facing, dtype=float))
+    face = np.stack([np.sin(yaw), np.cos(yaw)], axis=1)       # unit, (n, 2)
+    to_player = pos[player] - pos
+    norm = np.linalg.norm(to_player, axis=1)
+    ok = norm > 1e-9
+    cos = np.ones(len(pos))
+    cos[ok] = (face[ok] * to_player[ok]).sum(axis=1) / norm[ok]
+    return is_cover * np.clip(cos, 0.0, 1.0)
 
 
 def make_positions(coords: Iterable[tuple[float, float]]) -> np.ndarray:
