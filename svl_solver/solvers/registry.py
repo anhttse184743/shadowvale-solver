@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from .base import Solver
 from .brute_force import BruteForceSolver
+from .exact import BranchAndBoundSolver
 from .ga import GeneticSolver
 from .greedy import GreedySolver
 from .planned import DWaveQpuSolver
@@ -16,6 +17,7 @@ from .sqa import SimulatedQuantumAnnealingSolver
 REGISTRY: dict[str, type[Solver]] = {
     "greedy": GreedySolver,
     "brute": BruteForceSolver,
+    "exact": BranchAndBoundSolver,
     "ga": GeneticSolver,
     "sa": ClassicalAnnealingSolver,
     "sqa": SimulatedQuantumAnnealingSolver,
@@ -24,7 +26,7 @@ REGISTRY: dict[str, type[Solver]] = {
     "qpu": DWaveQpuSolver,
 }
 
-CLASSICAL = ("greedy", "ga", "sa", "brute")
+CLASSICAL = ("greedy", "ga", "sa", "brute", "exact")
 QUANTUM_INSPIRED = ("sqa", "qiea", "qaoa", "qpu")
 
 

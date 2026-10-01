@@ -5,8 +5,9 @@
 * one CSV row per (instance, solver, repeat), appended as soon as it finishes
   so an overnight run that dies keeps everything done so far;
 * ``resume=True`` skips rows already present in the CSV;
-* the exact optimum is computed once per instance (cached) whenever
-  N!/(N−A)! ≤ spec.brute_force_max_candidates, giving approx_ratio and gap;
+* the exact optimum is computed once per instance (cached): by brute force whenever
+  N!/(N−A)! ≤ spec.brute_force_max_candidates, else by branch and bound (solvers/exact.py)
+  if it proves optimality within EXACT_TIME_LIMIT_S — giving approx_ratio and gap;
 * repeat r uses seed = instance.seed * 1000 + r for stochastic solvers, so a
   row can be replayed exactly from its CSV line.
 """
@@ -27,6 +28,7 @@ from ..model.objective import objective
 from ..qubo.formulation import build_qubo, QuboProblem
 from ..solvers.base import Solution
 from ..solvers.brute_force import BruteForceSolver
+from ..solvers.exact import BranchAndBoundSolver
 from ..solvers.registry import get_solver, REGISTRY
 from .metrics import CSV_COLUMNS, approx_ratio, gap
 
@@ -71,13 +73,24 @@ def _existing_keys(path: Path) -> set[tuple[str, str, int]]:
         return {(r["instance_id"], r["solver"], int(r["repeat"])) for r in csv.DictReader(f)}
 
 
+#: Seconds the branch-and-bound may spend proving the optimum of one instance too big for brute force.
+EXACT_TIME_LIMIT_S = 60.0
+
+
 def _optimum(inst: Instance, problem: QuboProblem, max_candidates: int,
-             cache: dict[str, tuple[float, float]]) -> tuple[float | None, float | None]:
-    if math.perm(problem.n_nodes, problem.n_agents) > max_candidates:
-        return None, None
+             cache: dict[str, tuple[float | None, float | None]]) -> tuple[float | None, float | None]:
+    """Brute force when the space is small, else branch and bound; None when not proven in time."""
     if inst.instance_id not in cache:
-        sol = BruteForceSolver(max_candidates=max_candidates).solve(problem)
-        cache[inst.instance_id] = (sol.energy, objective(inst, sol.assignment, problem.weights))
+        if math.perm(problem.n_nodes, problem.n_agents) <= max_candidates:
+            sol = BruteForceSolver(max_candidates=max_candidates).solve(problem)
+        elif EXACT_TIME_LIMIT_S > 0:
+            sol = BranchAndBoundSolver(time_limit_s=EXACT_TIME_LIMIT_S).solve(problem)
+            if not sol.meta.get("proven_optimal"):
+                sol = None
+        else:
+            sol = None
+        cache[inst.instance_id] = ((sol.energy, objective(inst, sol.assignment, problem.weights))
+                                   if sol is not None else (None, None))
     return cache[inst.instance_id]
 
 
