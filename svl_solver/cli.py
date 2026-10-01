@@ -93,6 +93,25 @@ def _cmd_compare(a: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_replay(a: argparse.Namespace) -> int:
+    from svl_solver.bench.replay import METRICS, compare_variants, format_summary, load_replay, summarize
+
+    rows = load_replay(*a.files)
+    invalid = sum(1 for r in rows if not r.get("valid_for_comparison", True))
+    print(f"{len(rows)} runs from {len(a.files)} file(s)" + (f", {invalid} not valid for comparison" +
+          (" (included)" if a.include_invalid else " (left out)") if invalid else ""))
+    print(format_summary(summarize(rows, a.include_invalid)))
+    if a.a and a.b:
+        bots = [a.bot] if a.bot else sorted({r["bot"] for r in rows}) + [None]
+        for metric in a.metrics.split(","):
+            for bot in bots:
+                r = compare_variants(rows, a.a, a.b, bot=bot, metric=metric, include_invalid=a.include_invalid)
+                print(f"{r['bot']:<12} {metric}: {a.a} {r['mean_a']:.3f} vs {a.b} {r['mean_b']:.3f}  "
+                      f"{r['test']} n={r['n_pairs'] or r['n_a'] + r['n_b']} p={r['p_value']:.4g}  "
+                      f"diff 95% CI [{r['ci95_diff'][0]:.3f}, {r['ci95_diff'][1]:.3f}]  ({METRICS.get(metric, 'higher')} is better for the guards)")
+    return 0
+
+
 def bench_main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="svl-bench", description="ShadowVale solver benchmark")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -142,6 +161,15 @@ def bench_main(argv: list[str] | None = None) -> None:
     c.add_argument("--b", required=True)
     c.add_argument("--metric", default="gap")
     c.set_defaults(fn=_cmd_compare)
+
+    rp = sub.add_parser("replay", help="in-game results of the Unity replay harness (exploit bots, JSONL)")
+    rp.add_argument("files", nargs="+")
+    rp.add_argument("--a", help="variant A for a paired comparison")
+    rp.add_argument("--b", help="variant B")
+    rp.add_argument("--bot", help="only this bot (default: each bot, then all)")
+    rp.add_argument("--metrics", default="captured,player_hp,escape_time_mean")
+    rp.add_argument("--include-invalid", action="store_true", help="also runs not valid for comparison")
+    rp.set_defaults(fn=_cmd_replay)
 
     a = p.parse_args(argv)
     sys.exit(a.fn(a))
