@@ -16,11 +16,17 @@ $py = ".\.venv\Scripts\python.exe"
 
 $hidden = @("--hidden-import", "uvicorn.logging", "--hidden-import", "uvicorn.loops.auto",
             "--hidden-import", "uvicorn.protocols.http.auto", "--hidden-import", "uvicorn.lifespan.on",
-            "--hidden-import", "neal", "--hidden-import", "dimod")
+            "--collect-all", "neal", "--collect-all", "dimod",  # Cython extensions
+            # dimod/cyqmbase has no __init__.py, so collect-all misses its two extensions:
+            "--hidden-import", "dimod.cyqmbase.cyqmbase_float32", "--hidden-import", "dimod.cyqmbase.cyqmbase_float64",
+            "--collect-submodules", "svl_solver")  # uvicorn imports the app by name
 if ($WithQuantum) { $hidden += @("--collect-all", "qiskit", "--collect-all", "qiskit_aer") }
 
+# PyInstaller logs INFO lines to stderr; with "Stop" PowerShell 5.1 would treat the first one as a failure.
+$ErrorActionPreference = "Continue"
 & $py -m PyInstaller --noconfirm --clean --onefile --name svl-solver `
-    --console @hidden `
-    -m svl_solver.api
+    --console @hidden --paths . `
+    scripts\sidecar_entry.py
+if ($LASTEXITCODE -ne 0) { throw "PyInstaller failed ($LASTEXITCODE)" }
 
-Write-Host "built dist\svl-solver.exe  — run:  dist\svl-solver.exe --port 8001"
+Write-Host "built dist\svl-solver.exe - run: dist\svl-solver.exe --port 8001 ; copy to <game>\Solver\svl-solver.exe"
