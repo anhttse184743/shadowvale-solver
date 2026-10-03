@@ -14,7 +14,7 @@
 #    later run uses that snapshot, so the set never changes (the replay itself records new ones).
 param(
     [string]$Tag = "exp-v1",
-    [string[]]$Parts = @("game", "replay", "medium", "small", "full"),
+    [string[]]$Parts = @("game", "replay", "medium", "small", "full", "movingai", "qaplib"),
     [int]$GameRepeats = 3,
     [int]$SuiteRepeats = 5,
     [int]$FullRepeats = 3,
@@ -83,9 +83,28 @@ if ($Parts -contains "full") {
             "--exact-s", "0", "--out", "$out\full.csv", "--quiet")
 }
 
+if ($Parts -contains "movingai") {
+    Log "--- External: coordination instances on Moving AI game maps (Sturtevant 2012), $GameRepeats repeats"
+    if (-not (Test-Path "datasets\external\movingai")) { & .\.venv\Scripts\python.exe scriptsetch_datasets.py 2>&1 | Tee-Object -FilePath $log -Append }
+    if (-not (Test-Path "$out\movingai-instances.jsonl")) {
+        Bench @("movingai", "--per-set", "10", "--agents", "4,6,8", "--seeds", "1,2,3", "--out", "$out\movingai-instances.jsonl")
+    }
+    Bench @("game", "$out\movingai-instances.jsonl", "--include-tuning", "--solvers", $Solvers, "--repeats", "$GameRepeats",
+            "--budget-ms", "120", "--exact-s", "5", "--out", "$out\movingai.csv", "--quiet")
+}
+
+if ($Parts -contains "qaplib") {
+    if (-not (Test-Path "datasets\external\qaplib")) { & .\.venv\Scripts\python.exe scriptsetch_datasets.py 2>&1 | Tee-Object -FilePath $log -Append }
+    foreach ($budget in @(120, 1000)) {
+        Log "--- External: QAPLIB n<=30 (Burkard et al. 1997), budget $budget ms, $SuiteRepeats repeats, gap to the published optimum"
+        Bench @("qaplib", "--max-n", "30", "--solvers", $Solvers, "--repeats", "$SuiteRepeats", "--budget-ms", "$budget",
+                "--out", "$out\qaplib-$budget.csv", "--quiet")
+    }
+}
+
 Log "--- analysis"
 $all = $Solvers
-foreach ($csv in @("game", "medium", "small", "full")) {
+foreach ($csv in @("game", "medium", "small", "full", "movingai", "qaplib-120", "qaplib-1000")) {
     if (Test-Path "$out\$csv.csv") {
         Log "[$csv] gap to the proven optimum, objective, latency - Holm-adjusted pairs"
         Bench @("compare", "$out\$csv.csv", "--all", $all, "--metric", "gap")

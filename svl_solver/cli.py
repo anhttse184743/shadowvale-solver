@@ -187,6 +187,45 @@ def _cmd_plot(a: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_qaplib(a: argparse.Namespace) -> int:
+    from svl_solver.bench.external import run_qaplib
+    from svl_solver.external import qaplib
+
+    insts = qaplib.load(a.data, a.soln, max_n=a.max_n)
+    if a.names:
+        wanted = set(a.names.split(","))
+        insts = [q for q in insts if q.name in wanted]
+    print(f"{len(insts)} QAPLIB instances (n <= {a.max_n}) with a published solution")
+    rows = run_qaplib(insts, [x for x in a.solvers.split(",") if x], a.repeats, a.budget_ms, a.out,
+                      progress=None if a.quiet else print)
+    print(f"wrote {len(rows)} new rows to {a.out}")
+    return 0
+
+
+def _cmd_movingai(a: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+
+    from svl_solver.external import movingai
+
+    maps = []
+    for set_dir in sorted(p for p in Path(a.maps).iterdir() if p.is_dir()):
+        files = sorted(set_dir.glob("*.map"))
+        if not files:
+            continue
+        step = max(1, len(files) // a.per_set)
+        maps += files[::step][:a.per_set]          # evenly spread over the set, same choice every time
+    agents = [int(x) for x in a.agents.split(",")]
+    seeds = [int(x) for x in a.seeds.split(",")]
+    recs = movingai.build_set(maps, agents, seeds, spacing=a.spacing, k_nodes=a.k_nodes, vision=a.vision)
+    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+    with open(a.out, "w", encoding="utf-8", newline="\n") as f:
+        for r in recs:
+            f.write(json.dumps(r) + "\n")
+    print(f"{len(maps)} maps -> {len(recs)} coordination instances -> {a.out}")
+    return 0
+
+
 def _cmd_tune(a: argparse.Namespace) -> int:
     import numpy as np
     from svl_solver.bench.tune import is_tuning_instance, tune, write_report
@@ -265,6 +304,29 @@ def bench_main(argv: list[str] | None = None) -> None:
     pl.add_argument("csv")
     pl.add_argument("--out", default="experiments/figures")
     pl.set_defaults(fn=_cmd_plot)
+
+    qp = sub.add_parser("qaplib", help="every solver on QAPLIB instances, gap to the published optimum")
+    qp.add_argument("--data", default="datasets/external/qaplib/data")
+    qp.add_argument("--soln", default="datasets/external/qaplib/soln")
+    qp.add_argument("--max-n", type=int, default=30)
+    qp.add_argument("--names", help="only these instances (comma-separated)")
+    qp.add_argument("--solvers", default="greedy,ga,sa,sqa,qiea")
+    qp.add_argument("--repeats", type=int, default=5)
+    qp.add_argument("--budget-ms", type=int, default=120)
+    qp.add_argument("--out", default="experiments/results/qaplib.csv")
+    qp.add_argument("--quiet", action="store_true")
+    qp.set_defaults(fn=_cmd_qaplib)
+
+    ma = sub.add_parser("movingai", help="coordination instances on Moving AI game maps (game-record JSONL)")
+    ma.add_argument("--maps", default="datasets/external/movingai", help="folder with one sub-folder of .map files per set")
+    ma.add_argument("--per-set", type=int, default=10)
+    ma.add_argument("--agents", default="4,6,8")
+    ma.add_argument("--seeds", default="1,2,3")
+    ma.add_argument("--spacing", type=int, default=4)
+    ma.add_argument("--k-nodes", type=int, default=24)
+    ma.add_argument("--vision", type=float, default=14.0)
+    ma.add_argument("--out", default="datasets/derived/movingai.jsonl")
+    ma.set_defaults(fn=_cmd_movingai)
 
     tn = sub.add_parser("tune", help="equal-effort hyper-parameter search for the stochastic solvers")
     tn.add_argument("--solvers", default="ga,sa,sqa,qiea")

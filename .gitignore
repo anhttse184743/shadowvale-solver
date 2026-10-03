@@ -26,3 +26,7 @@ experiments/results/*.log
 # OS
 .DS_Store
 Thumbs.db
+
+# Standard external datasets (their authors own them): scripts/fetch_datasets.py downloads them
+datasets/external/
+datasets/derived/
