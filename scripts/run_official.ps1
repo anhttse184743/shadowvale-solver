@@ -1,5 +1,5 @@
 # The official experiment run (see ShadowVale Docs/Experiments/protocol.md), one part after the
-# other on this machine — never in parallel: the solvers' budget is wall-clock time.
+# other on this machine - never in parallel: the solvers' budget is wall-clock time.
 #
 #   .\scripts\run_official.ps1                 # everything, results in experiments\results\exp-v1
 #   .\scripts\run_official.ps1 -Parts game,replay
