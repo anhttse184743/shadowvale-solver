@@ -29,7 +29,16 @@ from .instances.suite import BUILTIN_SUITES, load_suite
 from .solvers.registry import list_variants
 
 
+def _set_exact_limit(a: argparse.Namespace) -> None:
+    """--exact-s: seconds the branch-and-bound may take per instance to prove the optimum (0 = never)."""
+    from svl_solver.bench import runner
+
+    if getattr(a, "exact_s", None) is not None:
+        runner.EXACT_TIME_LIMIT_S = float(a.exact_s)
+
+
 def _cmd_run(a: argparse.Namespace) -> int:
+    _set_exact_limit(a)
     spec = load_suite(a.config) if a.config else BUILTIN_SUITES[a.suite]
     solvers = [s for s in a.solvers.split(",") if s]
     rows = run_suite(spec, solvers, repeats=a.repeats, out=a.out, budget_ms=a.budget_ms,
@@ -92,6 +101,7 @@ def _load_game(patterns: list[str]) -> list:
 def _cmd_game(a: argparse.Namespace) -> int:
     from svl_solver.bench.tune import is_tuning_instance
 
+    _set_exact_limit(a)
     records = _load_game(a.records)
     if not a.include_tuning:
         held = sum(1 for r in records if is_tuning_instance(r.instance_id))
@@ -217,6 +227,8 @@ def bench_main(argv: list[str] | None = None) -> None:
     r.add_argument("--out", default="experiments/results/bench.csv")
     r.add_argument("--no-resume", action="store_true")
     r.add_argument("--quiet", action="store_true")
+    r.add_argument("--exact-s", type=float, default=None,
+                   help="seconds per instance to prove the optimum beyond brute force (default 60; 0 = never)")
     r.set_defaults(fn=_cmd_run)
 
     s = sub.add_parser("summary", help="aggregate a results CSV")
@@ -245,6 +257,8 @@ def bench_main(argv: list[str] | None = None) -> None:
     gm.add_argument("--no-resume", action="store_true")
     gm.add_argument("--quiet", action="store_true")
     gm.add_argument("--include-tuning", action="store_true", help="also the instances the solvers were tuned on")
+    gm.add_argument("--exact-s", type=float, default=None,
+                    help="seconds per instance to prove the optimum beyond brute force (default 60; 0 = never)")
     gm.set_defaults(fn=_cmd_game)
 
     pl = sub.add_parser("plot", help="figures for the report from a results CSV (needs matplotlib)")
