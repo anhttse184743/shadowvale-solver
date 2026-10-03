@@ -89,7 +89,9 @@ class SimulatedQuantumAnnealingSolver(Solver):
         while sweep < planned:
             if deadline is not None:
                 now = time.perf_counter()
-                if now >= deadline:
+                # Always finish one sweep (as SA always finishes one read): a deadline already passed
+                # during setup — a 640-variable instance on a busy machine — must not return nothing.
+                if sweep > 0 and now >= deadline:
                     stopped = True
                     break
                 if sweep == 3:

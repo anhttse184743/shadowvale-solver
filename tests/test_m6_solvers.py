@@ -65,6 +65,15 @@ def test_respects_a_tight_budget_on_a_game_sized_instance(variant):
     assert sol.meta["samples_evaluated"] > 0
 
 
+@pytest.mark.parametrize("variant", HEURISTICS)
+def test_answers_even_when_the_budget_is_gone_before_it_starts(variant):
+    # exp-v1 'full': SQA returned None on a 640-variable instance whose setup outlived the
+    # deadline on a busy machine. Every solver must still answer with a feasible plan.
+    p = small(3)
+    sol = get_solver(variant).solve(p, budget_ms=0, seed=3)
+    assert len(set(sol.assignment)) == p.n_agents and all(0 <= k < p.n_nodes for k in sol.assignment)
+
+
 def test_ga_and_qiea_never_lose_to_greedy():
     for seed in range(1, 6):
         p = build_qubo(generate(seed=seed, n_nodes=16, n_agents=4))
