@@ -19,7 +19,9 @@ $hidden = @("--hidden-import", "uvicorn.logging", "--hidden-import", "uvicorn.lo
             "--collect-all", "neal", "--collect-all", "dimod",  # Cython extensions
             # dimod/cyqmbase has no __init__.py, so collect-all misses its two extensions:
             "--hidden-import", "dimod.cyqmbase.cyqmbase_float32", "--hidden-import", "dimod.cyqmbase.cyqmbase_float64",
-            "--collect-submodules", "svl_solver")  # uvicorn imports the app by name
+            "--collect-submodules", "svl_solver",  # uvicorn imports the app by name
+            # Bench-only plotting: the sidecar never draws, keep matplotlib (~17 MB) out of the exe.
+            "--exclude-module", "matplotlib", "--exclude-module", "tkinter", "--exclude-module", "PIL")
 if ($WithQuantum) { $hidden += @("--collect-all", "qiskit", "--collect-all", "qiskit_aer") }
 
 # PyInstaller logs INFO lines to stderr; with "Stop" PowerShell 5.1 would treat the first one as a failure.
