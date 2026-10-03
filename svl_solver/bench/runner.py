@@ -68,11 +68,33 @@ def _density_of(inst: Instance) -> float:
         return math.nan
 
 
+def _drop_partial_tail(path: Path) -> bool:
+    """A run killed while writing a row leaves half a line at the end; cut it off so the resumed
+    run neither trips over it nor appends its next row onto it. True if something was cut."""
+    if not path.exists() or path.stat().st_size == 0:
+        return False
+    with open(path, "rb+") as f:
+        f.seek(-1, os.SEEK_END)
+        if f.read(1) == b"\n":
+            return False
+        f.seek(0)
+        data = f.read()
+        f.truncate(data.rfind(b"\n") + 1)
+        return True
+
+
 def _existing_keys(path: Path) -> set[tuple[str, str, int]]:
+    """Rows already done (the resume checkpoint); malformed rows do not count and are redone."""
     if not path.exists():
         return set()
+    keys = set()
     with open(path, newline="", encoding="utf-8") as f:
-        return {(r["instance_id"], r["solver"], int(r["repeat"])) for r in csv.DictReader(f)}
+        for r in csv.DictReader(f):
+            try:
+                keys.add((r["instance_id"], r["solver"], int(r["repeat"])))
+            except (KeyError, TypeError, ValueError):
+                continue
+    return keys
 
 
 #: Seconds the branch-and-bound may spend proving the optimum of one instance too big for brute force.
@@ -109,6 +131,8 @@ def run_suite(spec: SuiteSpec, solvers: Iterable[str], repeats: int = 1,
         if not REGISTRY[s].available:
             raise NotImplementedError(f"solver '{s}' is not implemented yet ({REGISTRY[s].due})")
     budget = int(budget_ms if budget_ms is not None else spec.budget_ms)
+    if resume and _drop_partial_tail(out) and progress:
+        progress(f"{out}: dropped a half-written last row from an interrupted run")
     done = _existing_keys(out) if resume else set()
     write_header = not out.exists() or os.path.getsize(out) == 0
 

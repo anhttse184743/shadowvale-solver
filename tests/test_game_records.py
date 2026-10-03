@@ -66,3 +66,16 @@ def test_bench_runs_on_recorded_instances(tmp_path):
     qiea = min(r.energy for r in rows if r.solver == "qiea")
     greedy = min(r.energy for r in rows if r.solver == "greedy")
     assert qiea <= greedy + 1e-9
+
+
+def test_an_interrupted_run_resumes_without_duplicates_or_a_broken_row(tmp_path):
+    records = load_records(FIXTURE)
+    spec = SuiteSpec(name="game", nodes=[], agents=[], densities=[], seeds=[], budget_ms=30)
+    out = tmp_path / "game.csv"
+    run_suite(spec, ["greedy"], repeats=2, out=out, progress=None, instances=records)
+    text = out.read_text(encoding="utf-8")
+    out.write_text(text + text.splitlines()[-1][:25], encoding="utf-8")   # killed mid-row
+    rows = run_suite(spec, ["greedy", "qiea"], repeats=2, out=out, progress=None, instances=records)
+    assert [r.solver for r in rows] == ["qiea", "qiea"], "greedy rows were done; only qiea runs"
+    lines = out.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 1 + 4, "header + 2 greedy + 2 qiea, the half row is gone"

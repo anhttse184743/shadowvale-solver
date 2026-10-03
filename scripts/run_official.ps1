@@ -5,8 +5,13 @@
 #   .\scripts\run_official.ps1 -Parts game,replay
 #
 # Needs: both repos on the tagged commit, Unity closed (batch mode locks the project),
-# dist\svl-solver.exe built (scripts\build_sidecar.ps1). Resumable: bench parts skip rows already
-# in their CSV; the replay part appends. Takes hours (overnight).
+# dist\svl-solver.exe built (scripts\build_sidecar.ps1). Takes hours (overnight).
+#
+# Checkpoints - if the run stops (crash, power, closing the window), start the same command again:
+#  * bench parts write each row as soon as it is done and skip rows already in their CSV;
+#  * the replay part appends one line per finished run and skips runs already in replay.jsonl;
+#  * the recorded game instances are copied into <out>\game-instances on the first run and every
+#    later run uses that snapshot, so the set never changes (the replay itself records new ones).
 param(
     [string]$Tag = "exp-v1",
     [string[]]$Parts = @("game", "replay", "medium", "small", "full"),
@@ -35,13 +40,20 @@ if (git status --porcelain --untracked-files=no) { Log "WARNING: solver repo has
 if (git -C $GameRepo status --porcelain --untracked-files=no) { Log "WARNING: game repo has uncommitted changes" }
 
 if ($Parts -contains "game") {
+    $snapshot = Join-Path $out "game-instances"
+    if (-not (Test-Path $snapshot)) {
+        New-Item -ItemType Directory -Force $snapshot | Out-Null
+        Copy-Item "$Research\coordination-*.jsonl" $snapshot
+        Log "snapshot: $((Get-ChildItem $snapshot -Filter *.jsonl).Count) record files copied to $snapshot"
+    } else { Log "snapshot: reusing $snapshot ($((Get-ChildItem $snapshot -Filter *.jsonl).Count) files)" }
     Log "--- A: recorded game instances (evaluation split), $GameRepeats repeats"
-    Bench @("game", "$Research\coordination-*.jsonl", "--solvers", $Solvers, "--repeats", "$GameRepeats",
+    Bench @("game", "$snapshot\coordination-*.jsonl", "--solvers", $Solvers, "--repeats", "$GameRepeats",
             "--budget-ms", "120", "--exact-s", "5", "--out", "$out\game.csv", "--quiet")
 }
 
 if ($Parts -contains "replay") {
     Log "--- B: in-game exploit bots, $ReplayRuns runs x 3 bots x [$Solvers]"
+    Get-Process svl-solver -ErrorAction SilentlyContinue | Stop-Process -Force   # left over from an interrupted run
     $sidecar = Start-Process -FilePath "dist\svl-solver.exe" -ArgumentList "--port 8001 --log-level warning" -PassThru -WindowStyle Hidden
     Start-Sleep -Seconds 5
     $env:SVL_REPLAY_RUNS = "$ReplayRuns"; $env:SVL_REPLAY_VARIANTS = $Solvers
