@@ -45,13 +45,13 @@ def qubo_to_ising(Q: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 class SimulatedQuantumAnnealingSolver(Solver):
     variant_id = "sqa"
 
-    # Defaults tuned 30/09/2026 under the game's 120 ms budget, on 12 seeded 8-node/3-agent
-    # instances and 11 instances recorded in Map 1 (22-24 nodes, 2-4 agents): energies are
-    # normalised by the penalty λ so T means the same at every size (normalising by the largest
-    # coupling made T effectively hotter as λ grew). P=8, T=0.05, Γ0=1: 12/12 optimal on the small
-    # set, mean gap 1.2 % to the best known on the game set.
-    def __init__(self, trotter: int = 8, sweeps: int = 600, temperature: float = 0.05,
-                 gamma_start: float = 1.0, gamma_end: float = 0.02, time_fraction: float = 0.8,
+    # Energies are normalised by the penalty λ so T means the same at every size (normalising by the
+    # largest coupling made T effectively hotter as λ grew). Defaults from `svl-bench tune`
+    # (03/10/2026, experiments/tuning): P=16, T=0.0127, Γ 5.36→0.0204 — mean gap 15.6 % → 9.0 % on the
+    # tuning set (8 generated + 16 recorded game instances with 4–8 agents, 120 ms), same 30 trials
+    # as every solver. The previous P=8, T=0.05, Γ0=1 had been tuned on 2–4-agent instances only.
+    def __init__(self, trotter: int = 16, sweeps: int = 600, temperature: float = 0.0127,
+                 gamma_start: float = 5.36, gamma_end: float = 0.0204, time_fraction: float = 0.8,
                  normalise: str = "lambda") -> None:
         self.trotter = max(2, int(trotter))
         self.sweeps = max(1, int(sweeps))

@@ -53,3 +53,18 @@ def test_compare_falls_back_to_mann_whitney_when_unpaired():
     r = compare(rows, "a", "b", metric="gap")
     assert r["test"] == "mann_whitney" and r["n_pairs"] == 0
     assert not math.isnan(r["p_value"])
+
+
+def test_holm_matches_its_textbook_example():
+    from svl_solver.bench.stats import holm
+    # p = (0.01, 0.04, 0.03, 0.005): sorted 0.005·4, 0.01·3, 0.03·2, 0.04·1 → 0.02, 0.03, 0.06, 0.06 (monotone).
+    assert holm([0.01, 0.04, 0.03, 0.005]) == pytest.approx([0.03, 0.06, 0.06, 0.02])
+    assert holm([0.9, 0.8]) == pytest.approx([1.0, 1.0])
+
+
+def test_compare_all_covers_every_pair_once():
+    from svl_solver.bench.stats import compare_all
+    rows = _rows("a", [0.0] * 8) + _rows("b", [0.1] * 8) + _rows("c", [0.2] * 8)
+    res = compare_all(rows, ["a", "b", "c"], metric="gap")
+    assert {(r["a"], r["b"]) for r in res} == {("a", "b"), ("a", "c"), ("b", "c")}
+    assert all(r["p_holm"] >= r["p_value"] for r in res)

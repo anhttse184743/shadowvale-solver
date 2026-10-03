@@ -18,7 +18,7 @@ import numpy as np
 CSV_COLUMNS = [
     "timestamp", "suite", "instance_id", "seed", "n_nodes", "n_agents", "density", "n_vars",
     "solver", "repeat", "budget_ms", "feasible_raw", "energy", "objective", "latency_ms",
-    "hit_budget", "opt_energy", "opt_objective", "approx_ratio", "gap", "note",
+    "hit_budget", "opt_energy", "opt_objective", "approx_ratio", "gap", "note", "code_version",
 ]
 
 

@@ -71,8 +71,32 @@ def _cmd_gen(a: argparse.Namespace) -> int:
     return 0
 
 
+def _load_game(patterns: list[str]) -> list:
+    """Every record in the files (globs allowed), each instance id once; unreadable files are skipped."""
+    import glob as _glob
+    seen, out = set(), []
+    for pat in patterns:
+        for path in sorted(_glob.glob(pat)) or [pat]:
+            try:
+                recs = load_records(path)
+            except (OSError, ValueError, KeyError) as e:
+                print(f"skipped {path}: {e}")
+                continue
+            for r in recs:
+                if r.instance_id not in seen:
+                    seen.add(r.instance_id)
+                    out.append(r)
+    return out
+
+
 def _cmd_game(a: argparse.Namespace) -> int:
-    records = load_records(a.records)
+    from svl_solver.bench.tune import is_tuning_instance
+
+    records = _load_game(a.records)
+    if not a.include_tuning:
+        held = sum(1 for r in records if is_tuning_instance(r.instance_id))
+        records = [r for r in records if not is_tuning_instance(r.instance_id)]
+        print(f"{held} instances of the tuning split left out (--include-tuning to keep them)")
     spec = SuiteSpec(name="game", nodes=[], agents=[], densities=[], seeds=[], budget_ms=a.budget_ms,
                      brute_force_max_candidates=a.brute_max)
     solvers = [s for s in a.solvers.split(",") if s]
@@ -85,6 +109,18 @@ def _cmd_game(a: argparse.Namespace) -> int:
 def _cmd_compare(a: argparse.Namespace) -> int:
     with open(a.csv, newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
+    if a.all:
+        from svl_solver.bench.stats import compare_all
+
+        variants = [v for v in a.all.split(",") if v]
+        print(f"{a.metric}: {len(variants)} solvers, {len(variants) * (len(variants) - 1) // 2} pairs, Holm-adjusted")
+        for r in compare_all(rows, variants, metric=a.metric):
+            print(f"  {r['a']:>6} vs {r['b']:<6} mean {r['mean_a']:.4f} vs {r['mean_b']:.4f}  {r['test']} "
+                  f"p={r['p_value']:.4g}  p_holm={r['p_holm']:.4g}  diff 95% CI [{r['ci95_diff'][0]:.4f}, {r['ci95_diff'][1]:.4f}]")
+        return 0
+    if not (a.a and a.b):
+        print("give --a and --b, or --all solver1,solver2,...")
+        return 2
     r = compare(rows, a.a, a.b, metric=a.metric)
     print(f"{r['metric']}: {r['a']} mean={r['mean_a']:.4f} median={r['median_a']:.4f} (n={r['n_a']}) vs "
           f"{r['b']} mean={r['mean_b']:.4f} median={r['median_b']:.4f} (n={r['n_b']})")
@@ -109,6 +145,61 @@ def _cmd_replay(a: argparse.Namespace) -> int:
                 print(f"{r['bot']:<12} {metric}: {a.a} {r['mean_a']:.3f} vs {a.b} {r['mean_b']:.3f}  "
                       f"{r['test']} n={r['n_pairs'] or r['n_a'] + r['n_b']} p={r['p_value']:.4g}  "
                       f"diff 95% CI [{r['ci95_diff'][0]:.3f}, {r['ci95_diff'][1]:.3f}]  ({METRICS.get(metric, 'higher')} is better for the guards)")
+    return 0
+
+
+def _cmd_plot(a: argparse.Namespace) -> int:
+    from collections import defaultdict
+    from pathlib import Path
+
+    from svl_solver.bench import plots
+
+    with open(a.csv, newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    # One point per (solver, nodes, agents): the chokepoint densities averaged.
+    groups: dict = defaultdict(list)
+    for s in summarize(rows):
+        groups[(s["solver"], s["n_nodes"], s["n_agents"])].append(s)
+    merged = []
+    for (solver, n, ag), ss in groups.items():
+        m = {"solver": solver, "n_nodes": n, "n_agents": ag}
+        for k in ("latency_p50_ms", "latency_p95_ms", "gap_mean", "success_rate", "timeout_rate"):
+            vals = [x[k] for x in ss if x.get(k) is not None]
+            m[k] = sum(vals) / len(vals) if vals else None
+        merged.append(m)
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    plots.latency_vs_nodes(merged, str(out / "latency.png"))
+    plots.quality_vs_nodes(merged, str(out / "quality.png"))
+    for solver in sorted({m["solver"] for m in merged}):
+        plots.viable_regime_heatmap(merged, solver, str(out / f"viable_{solver}.png"))
+    print(f"figures in {out}")
+    return 0
+
+
+def _cmd_tune(a: argparse.Namespace) -> int:
+    import numpy as np
+    from svl_solver.bench.tune import is_tuning_instance, tune, write_report
+    from svl_solver.instances.generator import generate
+    from svl_solver.qubo.formulation import build_qubo
+
+    rng = np.random.default_rng(a.seed)
+    problems = []
+    if a.game:
+        pool = [r for r in _load_game(a.game) if is_tuning_instance(r.instance_id) and r.n_agents >= 4]
+        pool.sort(key=lambda r: r.instance_id)
+        for i in rng.permutation(len(pool))[:a.game_count]:
+            r = pool[int(i)]
+            problems.append((r.instance_id, build_qubo(r, r.weights)))
+    for i in range(a.generated_count):
+        n, ag, d = (20, 40, 60)[i % 3], (4, 6, 8)[(i // 3) % 3], (0.0, 0.3, 0.6)[(i // 9) % 3]
+        inst = generate(seed=901 + i, n_nodes=n, n_agents=ag, chokepoint_density=d)
+        problems.append((inst.instance_id, build_qubo(inst)))
+    solvers = [s for s in a.solvers.split(",") if s]
+    best, trials, info = tune(problems, solvers, trials=a.trials, budget_ms=a.budget_ms, finalists=a.finalists,
+                              repeats=a.repeats, seed=a.seed, exact_s=a.exact_s)
+    write_report(a.out, best, trials, info)
+    print(f"report: {a.out}/trials.csv, {a.out}/tuned.json")
     return 0
 
 
@@ -153,12 +244,33 @@ def bench_main(argv: list[str] | None = None) -> None:
     gm.add_argument("--out", default="experiments/results/game.csv")
     gm.add_argument("--no-resume", action="store_true")
     gm.add_argument("--quiet", action="store_true")
+    gm.add_argument("--include-tuning", action="store_true", help="also the instances the solvers were tuned on")
     gm.set_defaults(fn=_cmd_game)
+
+    pl = sub.add_parser("plot", help="figures for the report from a results CSV (needs matplotlib)")
+    pl.add_argument("csv")
+    pl.add_argument("--out", default="experiments/figures")
+    pl.set_defaults(fn=_cmd_plot)
+
+    tn = sub.add_parser("tune", help="equal-effort hyper-parameter search for the stochastic solvers")
+    tn.add_argument("--solvers", default="ga,sa,sqa,qiea")
+    tn.add_argument("--trials", type=int, default=30)
+    tn.add_argument("--budget-ms", type=int, default=120)
+    tn.add_argument("--game", nargs="*", default=[], help="recorded game instances (JSONL, globs); only the tuning split is used")
+    tn.add_argument("--game-count", type=int, default=16)
+    tn.add_argument("--generated-count", type=int, default=8, help="generated in-game-regime instances, seeds 901+")
+    tn.add_argument("--finalists", type=int, default=3)
+    tn.add_argument("--repeats", type=int, default=3)
+    tn.add_argument("--exact-s", type=float, default=10.0)
+    tn.add_argument("--seed", type=int, default=2026)
+    tn.add_argument("--out", default="experiments/tuning")
+    tn.set_defaults(fn=_cmd_tune)
 
     c = sub.add_parser("compare", help="paired significance test between two solvers in a results CSV")
     c.add_argument("csv")
-    c.add_argument("--a", required=True)
-    c.add_argument("--b", required=True)
+    c.add_argument("--a")
+    c.add_argument("--b")
+    c.add_argument("--all", help="every pair of these solvers (comma-separated), Holm-adjusted")
     c.add_argument("--metric", default="gap")
     c.set_defaults(fn=_cmd_compare)
 

@@ -125,3 +125,30 @@ def compare(rows: list[dict], variant_a: str, variant_b: str, metric: str = "app
         "mean_diff": (float(a_vals.mean() - b_vals.mean()) if len(a_vals) and len(b_vals) else math.nan),
         "ci95_diff": ci,
     }
+
+
+def holm(p_values: Sequence[float]) -> list[float]:
+    """Holm–Bonferroni adjusted p-values, in the input order. Comparing k solvers pairwise makes
+    k(k−1)/2 tests; without an adjustment one of them is "significant" by chance far more often
+    than 5 % of the time. Holm keeps the family-wise error at α and is uniformly more powerful
+    than plain Bonferroni."""
+    m = len(p_values)
+    order = sorted(range(m), key=lambda i: (math.inf if math.isnan(p_values[i]) else p_values[i]))
+    adjusted = [math.nan] * m
+    running = 0.0
+    for rank, i in enumerate(order):
+        p = p_values[i]
+        if math.isnan(p):
+            continue
+        running = max(running, min(1.0, (m - rank) * p))
+        adjusted[i] = running
+    return adjusted
+
+
+def compare_all(rows: list[dict], variants: Sequence[str], metric: str = "gap") -> list[dict]:
+    """Every pair of ``variants`` compared with :func:`compare`, plus ``p_holm`` over the family."""
+    results = [compare(rows, a, b, metric=metric)
+               for i, a in enumerate(variants) for b in variants[i + 1:]]
+    for r, p in zip(results, holm([r["p_value"] for r in results])):
+        r["p_holm"] = p
+    return results

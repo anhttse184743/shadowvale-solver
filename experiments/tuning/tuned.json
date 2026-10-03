@@ -1,0 +1,77 @@
+{
+ "best": {
+  "ga": {
+   "default_mean_gap": 0.00464995305271824,
+   "mean_gap": 0.0018176977876743186,
+   "params": {
+    "elite": 6,
+    "mutation": 0.10512953207506336,
+    "population": 76,
+    "tournament": 5
+   },
+   "trial": 3
+  },
+  "qiea": {
+   "default_mean_gap": 0.004473101703127991,
+   "mean_gap": 0.002997270377371544,
+   "params": {
+    "delta": 0.15834993579413878,
+    "margin": 0.2710769709743299,
+    "population": 29
+   },
+   "trial": 17
+  },
+  "sa": {
+   "default_mean_gap": 0.08586799288706119,
+   "mean_gap": 0.08586799288706119,
+   "params": {},
+   "trial": 0
+  },
+  "sqa": {
+   "default_mean_gap": 0.1561784086756061,
+   "mean_gap": 0.08999502819753029,
+   "params": {
+    "gamma_end": 0.020434980033166756,
+    "gamma_start": 5.364582871902586,
+    "temperature": 0.012739864531486577,
+    "trotter": 16
+   },
+   "trial": 13
+  }
+ },
+ "code_version": "0.1.0+1cbdadf.dirty",
+ "protocol": {
+  "budget_ms": 120,
+  "finalists": 3,
+  "instances": [
+   "Map 1-c14f73378cdc-4",
+   "Map 1-b63d49b2fbdf-4",
+   "Map 1-6a6fb616be15-4",
+   "Map 1-cf74bbf82162-3",
+   "Map 1-40c291cf9fad-4",
+   "Map 1-c2ec0f15de70-3",
+   "Map 1-716ec029aea2-7",
+   "Map 1-24a14d58d537-6",
+   "Map 1-fe6fcc3384e1-4",
+   "Map 1-44917b355154-3",
+   "Map 1-37892bc8b778-6",
+   "Map 1-a0b4f9b548f3-3",
+   "Map 1-ad6f530bf11d-3",
+   "Map 1-0ba418f4a50f-4",
+   "Map 1-34ef5d2fdb5b-5",
+   "Map 1-0ba418f4a50f-8",
+   "svl-n20-a4-c0.00-s901",
+   "svl-n40-a4-c0.00-s902",
+   "svl-n60-a4-c0.00-s903",
+   "svl-n20-a6-c0.00-s904",
+   "svl-n40-a6-c0.00-s905",
+   "svl-n60-a6-c0.00-s906",
+   "svl-n20-a8-c0.00-s907",
+   "svl-n40-a8-c0.00-s908"
+  ],
+  "repeats": 3,
+  "seed": 2026,
+  "trials": 30
+ },
+ "proven_optimum": 20
+}

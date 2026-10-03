@@ -30,6 +30,7 @@ from ..solvers.base import Solution
 from ..solvers.brute_force import BruteForceSolver
 from ..solvers.exact import BranchAndBoundSolver
 from ..solvers.registry import get_solver, REGISTRY
+from ..version import code_version
 from .metrics import CSV_COLUMNS, approx_ratio, gap
 
 
@@ -56,6 +57,7 @@ class BenchRow:
     approx_ratio: float | None
     gap: float | None
     note: str = ""
+    code_version: str = ""
 
 
 def _density_of(inst: Instance) -> float:
@@ -111,6 +113,7 @@ def run_suite(spec: SuiteSpec, solvers: Iterable[str], repeats: int = 1,
     write_header = not out.exists() or os.path.getsize(out) == 0
 
     rows: list[BenchRow] = []
+    version = code_version()
     opt_cache: dict[str, tuple[float, float]] = {}
     with open(out, "a", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=CSV_COLUMNS)
@@ -145,6 +148,7 @@ def run_suite(spec: SuiteSpec, solvers: Iterable[str], repeats: int = 1,
                         latency_ms=round(sol.latency_ms, 3), hit_budget=sol.hit_budget,
                         opt_energy=opt_e, opt_objective=opt_f,
                         approx_ratio=approx_ratio(f_sol, opt_f), gap=gap(sol.energy, opt_e), note=note,
+                        code_version=version,
                     )
                     w.writerow(asdict(row))
                     f.flush()

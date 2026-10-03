@@ -31,8 +31,10 @@ from .qiea import _energy
 class GeneticSolver(Solver):
     variant_id = "ga"
 
-    def __init__(self, population: int = 24, generations: int = 60, mutation: float = 0.15,
-                 elite: int = 2, tournament: int = 3, time_fraction: float = 0.8) -> None:
+    # Defaults from `svl-bench tune` (03/10/2026, experiments/tuning): mean gap 0.46 % → 0.18 % on the
+    # tuning set (8 generated + 16 recorded game instances, 120 ms), same 30 trials as every solver.
+    def __init__(self, population: int = 76, generations: int = 60, mutation: float = 0.105,
+                 elite: int = 6, tournament: int = 5, time_fraction: float = 0.8) -> None:
         self.population = max(4, int(population))
         self.generations = max(1, int(generations))
         self.mutation = float(mutation)

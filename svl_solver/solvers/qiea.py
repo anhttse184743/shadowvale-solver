@@ -39,8 +39,10 @@ from .greedy import GreedySolver
 class QuantumInspiredEvolutionarySolver(Solver):
     variant_id = "qiea"
 
-    def __init__(self, population: int = 8, generations: int = 80, delta: float = 0.045,
-                 margin: float = 0.06, time_fraction: float = 0.8) -> None:
+    # Defaults from `svl-bench tune` (03/10/2026, experiments/tuning): mean gap 0.45 % → 0.30 % on the
+    # tuning set (8 generated + 16 recorded game instances, 120 ms), same 30 trials as every solver.
+    def __init__(self, population: int = 29, generations: int = 80, delta: float = 0.158,
+                 margin: float = 0.271, time_fraction: float = 0.8) -> None:
         self.population = max(2, int(population))
         self.generations = max(1, int(generations))
         self.delta = float(delta)
