@@ -85,7 +85,7 @@ if ($Parts -contains "full") {
 
 if ($Parts -contains "movingai") {
     Log "--- External: coordination instances on Moving AI game maps (Sturtevant 2012), $GameRepeats repeats"
-    if (-not (Test-Path "datasets\external\movingai")) { & .\.venv\Scripts\python.exe scriptsetch_datasets.py 2>&1 | Tee-Object -FilePath $log -Append }
+    if (-not (Test-Path "datasets\external\movingai")) { & .\.venv\Scripts\python.exe scripts\fetch_datasets.py 2>&1 | Tee-Object -FilePath $log -Append }
     if (-not (Test-Path "$out\movingai-instances.jsonl")) {
         Bench @("movingai", "--per-set", "10", "--agents", "4,6,8", "--seeds", "1,2,3", "--out", "$out\movingai-instances.jsonl")
     }
@@ -94,7 +94,7 @@ if ($Parts -contains "movingai") {
 }
 
 if ($Parts -contains "qaplib") {
-    if (-not (Test-Path "datasets\external\qaplib")) { & .\.venv\Scripts\python.exe scriptsetch_datasets.py 2>&1 | Tee-Object -FilePath $log -Append }
+    if (-not (Test-Path "datasets\external\qaplib")) { & .\.venv\Scripts\python.exe scripts\fetch_datasets.py 2>&1 | Tee-Object -FilePath $log -Append }
     foreach ($budget in @(120, 1000)) {
         Log "--- External: QAPLIB n<=30 (Burkard et al. 1997), budget $budget ms, $SuiteRepeats repeats, gap to the published optimum"
         Bench @("qaplib", "--max-n", "30", "--solvers", $Solvers, "--repeats", "$SuiteRepeats", "--budget-ms", "$budget",
