@@ -52,16 +52,26 @@ if ($Parts -contains "game") {
 }
 
 if ($Parts -contains "replay") {
-    Log "--- B: in-game exploit bots, $ReplayRuns runs x 3 bots x [$Solvers]"
+    # "none" is the control: the guards radio contacts, nobody plans. The harness runs the
+    # coordinator in lockstep latency (a plan lands after its real solve time, in game time).
+    $replayVariants = "none,$Solvers"
+    Log "--- B: in-game exploit bots, $ReplayRuns runs x 3 bots x [$replayVariants], lockstep latency"
     Get-Process svl-solver -ErrorAction SilentlyContinue | Stop-Process -Force   # left over from an interrupted run
-    $sidecar = Start-Process -FilePath "dist\svl-solver.exe" -ArgumentList "--port 8001 --log-level warning" -PassThru -WindowStyle Hidden
-    Start-Sleep -Seconds 5
-    $env:SVL_REPLAY_RUNS = "$ReplayRuns"; $env:SVL_REPLAY_VARIANTS = $Solvers
+    $sidecar = Start-Process -FilePath "dist\svl-solver.exe" -ArgumentList "--port 8001 --log-level warning --parent-pid $PID" -PassThru -WindowStyle Hidden
+    # /health answers once the solver worker process is up and warmed (a few seconds).
+    $healthy = $false
+    for ($i = 0; $i -lt 60 -and -not $healthy; $i++) {
+        Start-Sleep -Seconds 1
+        try { $healthy = (Invoke-WebRequest -UseBasicParsing "http://127.0.0.1:8001/health" -TimeoutSec 2).StatusCode -eq 200 } catch { }
+    }
+    if (-not $healthy) { Log "WARNING: sidecar did not answer /health in 60 s - remote variants will be skipped" }
+    $env:SVL_REPLAY_RUNS = "$ReplayRuns"; $env:SVL_REPLAY_VARIANTS = $replayVariants
     $env:SVL_REPLAY_OUT = (Resolve-Path $out).Path + "\replay.jsonl"; $env:SVL_SOLVER_URL = "http://127.0.0.1:8001"
     & $Unity -batchmode -projectPath (Resolve-Path $GameRepo).Path -runTests -testPlatform EditMode `
         -assemblyNames ShadowVale.Map01.Tests -testFilter ShadowVale.Map01.Tests.Replay.ReplayHarnessTests.ExploitBotMatrix `
         -testResults ((Resolve-Path $out).Path + "\replay-tests.xml") -logFile ((Resolve-Path $out).Path + "\replay-unity.log") | Out-Null
-    Stop-Process -Id $sidecar.Id -ErrorAction SilentlyContinue
+    # The packaged exe is a launcher with the server (and its worker) as children: stop them all.
+    Get-Process svl-solver -ErrorAction SilentlyContinue | Stop-Process -Force
     Log "replay: $((Get-Content "$out\replay.jsonl" -ErrorAction SilentlyContinue | Measure-Object -Line).Lines) runs written"
 }
 
@@ -113,5 +123,10 @@ foreach ($csv in @("game", "medium", "small", "full", "movingai", "qaplib-120", 
         Bench @("plot", "$out\$csv.csv", "--out", "$out\figures-$csv")
     }
 }
-if (Test-Path "$out\replay.jsonl") { Bench @("replay", "$out\replay.jsonl", "--a", "qiea", "--b", "greedy") }
+if (Test-Path "$out\replay.jsonl") {
+    Log "[replay] every run (primary), each variant vs greedy and vs none - Holm-adjusted"
+    Bench @("replay", "$out\replay.jsonl", "--vs", "greedy,none", "--metrics", "captured,player_hp,escape_time_mean,plan_entropy_bits")
+    Log "[replay] runs valid for comparison only (sensitivity)"
+    Bench @("replay", "$out\replay.jsonl", "--vs", "greedy,none", "--metrics", "captured,player_hp", "--valid-only")
+}
 Log "=== done"

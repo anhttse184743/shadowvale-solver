@@ -11,7 +11,8 @@ from svl_solver.instances.io import to_qubo_request
 
 @pytest.fixture(scope="module")
 def client():
-    return TestClient(create_app())
+    with TestClient(create_app()) as c:      # runs startup: the solver worker is warmed up like in play
+        yield c
 
 
 def _request(seed=1, n=12, a=4, variant="greedy"):
@@ -76,3 +77,35 @@ def test_bad_matrix_size_rejected(client):
     _, req = _request()
     req["q_matrix"] = req["q_matrix"][:-1]
     assert client.post("/solve", json=req).status_code == 422
+
+
+def test_concurrent_requests_share_one_lane_and_keep_their_budget():
+    # Several squads re-planning at once: solves queue in one lane (the GIL makes parallel solves
+    # slower for everyone), each answers within its budget counted from arrival, queued ones with
+    # less search or greedy — and the reason says so.
+    import concurrent.futures as cf
+    import time
+
+    from svl_solver.api.app import _solve_in_lane, warm_up
+    from svl_solver.api.schemas import QuboRequest
+    from svl_solver.qubo.formulation import QuboProblem
+
+    _, raw = _request(seed=3, n=24, a=6, variant="qiea")
+    req = QuboRequest(**raw)
+    problem = QuboProblem.from_flat(req.q_matrix, req.agent_count, req.node_count, offset=req.offset,
+                                    lam=req.penalty_conflict, instance_id=req.instance_id)
+
+    warm_up()
+
+    def one(_):
+        t0 = time.perf_counter()
+        sol, hit, reason = _solve_in_lane("qiea", problem, req, t0)
+        return (time.perf_counter() - t0) * 1000.0, sol, reason
+
+    with cf.ThreadPoolExecutor(4) as ex:
+        results = list(ex.map(one, range(4)))
+    for elapsed, sol, _ in results:
+        assert len(set(sol.assignment)) == req.agent_count
+        assert elapsed <= req.latency_budget_ms + 30, f"{elapsed:.0f} ms"
+    assert any(r is None for _, _, r in results)                  # the first one got its whole budget
+    assert any(r and "queued" in r for _, _, r in results)        # the last ones were told why
