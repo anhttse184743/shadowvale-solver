@@ -20,6 +20,7 @@ Contract with the game (UC-12 exception flows):
 from __future__ import annotations
 
 import concurrent.futures as cf
+import os
 import threading
 import time
 
@@ -41,8 +42,16 @@ MIN_SOLVE_MS = 10             # less budget than this left after queueing → gr
 def _pool() -> cf.ProcessPoolExecutor:
     global _POOL
     if _POOL is None:
-        _POOL = cf.ProcessPoolExecutor(max_workers=1)
+        _POOL = cf.ProcessPoolExecutor(max_workers=1, initializer=_worker_init, initargs=(os.getpid(),))
     return _POOL
+
+
+def _worker_init(server_pid: int) -> None:
+    # The worker ends with the server even when the server is killed outright (it then has no
+    # chance to shut the pool down) — otherwise a packaged sidecar leaves it, and the launcher
+    # waiting to delete the files the worker still holds, running after the game is gone.
+    from .__main__ import exit_with
+    exit_with(server_pid)
 
 
 def _run(variant: str, problem: QuboProblem, budget_ms: int, seed: int):
