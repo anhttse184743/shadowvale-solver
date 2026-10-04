@@ -140,21 +140,33 @@ def _cmd_compare(a: argparse.Namespace) -> int:
 
 
 def _cmd_replay(a: argparse.Namespace) -> int:
-    from svl_solver.bench.replay import METRICS, compare_variants, format_summary, load_replay, summarize
+    from svl_solver.bench.replay import (METRICS, audit, compare_family, compare_variants, format_summary,
+                                         load_replay, summarize)
 
     rows = load_replay(*a.files)
+    every = not a.valid_only
     invalid = sum(1 for r in rows if not r.get("valid_for_comparison", True))
-    print(f"{len(rows)} runs from {len(a.files)} file(s)" + (f", {invalid} not valid for comparison" +
-          (" (included)" if a.include_invalid else " (left out)") if invalid else ""))
-    print(format_summary(summarize(rows, a.include_invalid)))
-    if a.a and a.b:
-        bots = [a.bot] if a.bot else sorted({r["bot"] for r in rows}) + [None]
-        for metric in a.metrics.split(","):
+    print(f"{len(rows)} runs from {len(a.files)} file(s); " +
+          ((f"{invalid} marked not valid for comparison, " + ("included (every run: the primary analysis)" if every
+            else "left out (sensitivity analysis)")) if invalid else "all valid for comparison"))
+    for warning in audit(rows):
+        print("WARNING: " + warning)
+    print(format_summary(summarize(rows, every)))
+    bots = [a.bot] if a.bot else sorted({r["bot"] for r in rows}) + [None]
+    for metric in a.metrics.split(","):
+        better = METRICS.get(metric, "higher")
+        if a.a and a.b:
             for bot in bots:
-                r = compare_variants(rows, a.a, a.b, bot=bot, metric=metric, include_invalid=a.include_invalid)
+                r = compare_variants(rows, a.a, a.b, bot=bot, metric=metric, include_invalid=every)
                 print(f"{r['bot']:<12} {metric}: {a.a} {r['mean_a']:.3f} vs {a.b} {r['mean_b']:.3f}  "
                       f"{r['test']} n={r['n_pairs'] or r['n_a'] + r['n_b']} p={r['p_value']:.4g}  "
-                      f"diff 95% CI [{r['ci95_diff'][0]:.3f}, {r['ci95_diff'][1]:.3f}]  ({METRICS.get(metric, 'higher')} is better for the guards)")
+                      f"diff 95% CI [{r['ci95_diff'][0]:.3f}, {r['ci95_diff'][1]:.3f}]  ({better} is better for the guards)")
+        if a.vs:
+            for bot in bots:
+                for r in compare_family(rows, a.vs.split(","), metric=metric, bot=bot, include_invalid=every):
+                    print(f"{r['bot']:<12} {metric:<16} {r['a']:>6} {r['mean_a']:.3f} vs {r['b']:<6} {r['mean_b']:.3f}  "
+                          f"n={r['n_pairs'] or r['n_a'] + r['n_b']} p={r['p_value']:.4g} p_holm={r['p_holm']:.4g}  "
+                          f"diff 95% CI [{r['ci95_diff'][0]:.3f}, {r['ci95_diff'][1]:.3f}]  ({better} is better for the guards)")
     return 0
 
 
@@ -356,7 +368,9 @@ def bench_main(argv: list[str] | None = None) -> None:
     rp.add_argument("--b", help="variant B")
     rp.add_argument("--bot", help="only this bot (default: each bot, then all)")
     rp.add_argument("--metrics", default="captured,player_hp,escape_time_mean")
-    rp.add_argument("--include-invalid", action="store_true", help="also runs not valid for comparison")
+    rp.add_argument("--vs", help="baselines, e.g. greedy,none: every other variant against each, Holm-adjusted")
+    rp.add_argument("--valid-only", action="store_true",
+                    help="only runs marked valid_for_comparison (sensitivity analysis; default: every run)")
     rp.set_defaults(fn=_cmd_replay)
 
     a = p.parse_args(argv)

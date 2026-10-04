@@ -7,7 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from svl_solver.bench.replay import compare_variants, format_summary, load_replay, summarize, wilson
+from svl_solver.bench.replay import (audit, compare_family, compare_variants, format_summary, load_replay, summarize,
+                                     wilson)
 
 FIXTURE = Path(__file__).parent / "fixtures" / "replay_sample.jsonl"
 
@@ -32,10 +33,11 @@ def test_wilson_interval_is_sane_at_the_extremes():
     assert wilson(5, 10) == pytest.approx((0.2366, 0.7634), abs=1e-3)
 
 
-def _run(bot, variant, seed, captured, hp, valid=True):
+def _run(bot, variant, seed, captured, hp, valid=True, plans=3, lockstep=True):
     return {"bot": bot, "variant": variant, "seed": seed, "captured": 1.0 if captured else 0.0,
             "outcome": "captured" if captured else "escaped", "player_hp": hp, "escape_time_mean": 0 if captured else 8.0,
-            "coordination_score": 0.6, "plan_entropy_bits": 2.0, "valid_for_comparison": valid}
+            "coordination_score": 0.6, "plan_entropy_bits": 2.0, "valid_for_comparison": valid,
+            "encounters": 1, "plans": plans, "lockstep_latency": lockstep, "plans_discarded": 0, "first_plan_delay_s": 0.1}
 
 
 def test_variants_are_compared_on_paired_seeds():
@@ -55,3 +57,27 @@ def test_runs_not_valid_for_comparison_are_left_out_by_default():
     rows = [_run("same_bush", "sqa", 1, True, 0, valid=False), _run("same_bush", "sqa", 2, False, 50)]
     assert summarize(rows)[0]["runs"] == 1
     assert summarize(rows, include_invalid=True)[0]["runs"] == 2
+
+
+def test_audit_flags_runs_without_lockstep_and_variants_that_never_got_a_plan_through():
+    # exp-v1's first replay: remote plans arrived late and were thrown away, the guards fought plan-less.
+    rows = [_run("same_route", "greedy", s, False, 60, lockstep=False) for s in range(10)]
+    rows += [_run("same_route", "qiea", s, True, 0, plans=0 if s < 7 else 2, lockstep=False) for s in range(10)]
+    rows += [_run("same_route", "none", s, True, 0, plans=0, lockstep=False) for s in range(10)]
+    warnings = audit(rows)
+    assert any("without lockstep" in w for w in warnings)
+    assert any("qiea: 70%" in w for w in warnings)
+    assert not any(" none:" in w for w in warnings), "the control never plans by design"
+    assert {s["variant"]: s["no_plan"] for s in summarize(rows, True)} == {"greedy": 0, "qiea": .7, "none": 0}
+    assert audit([_run("same_route", v, 1, False, 50) for v in ("greedy", "qiea")]) == []
+
+
+def test_every_variant_is_compared_with_each_baseline_under_one_holm_family():
+    rows = []
+    for seed in range(12):
+        rows.append(_run("same_bush", "none", seed, True, 0))
+        rows.append(_run("same_bush", "greedy", seed, False, 50))
+        rows.append(_run("same_bush", "qiea", seed, seed % 3 == 0, 30))
+    res = compare_family(rows, ["greedy", "none"], metric="player_hp", bot="same_bush")
+    assert [(r["a"], r["b"]) for r in res] == [("none", "greedy"), ("qiea", "greedy"), ("qiea", "none")]
+    assert all(r["p_holm"] >= r["p_value"] for r in res)
