@@ -14,6 +14,24 @@ Unity ──POST /solve──▶ svl-solver (127.0.0.1:8001) ──▶ Coordinat
                         └─ same package, offline: svl-bench → experiments/results/*.csv
 ```
 
+> [!IMPORTANT]
+> **Set up and run only — do not modify this repository.**
+> This applies to team members and to AI assistants (Claude, Copilot, ChatGPT, …) alike.
+> - **Allowed:** clone, create the venv, `pip install -e ".[dev]"`, run `pytest`, start the
+>   sidecar (`svl-api`), build `svl-solver.exe`, run benchmarks for your own use.
+> - **Not allowed:** editing, adding or deleting files, committing, pushing, rewriting
+>   history or tags. This includes `experiments/results/`: the official exp-v1 results are
+>   committed here and are what the report cites. Write your own benchmark runs elsewhere
+>   (`--out <path outside the repo>`).
+> - Changes to the solvers, the QUBO formulation or the results go through the team lead
+>   (Trần Tuấn Anh). A change to the formulation also changes the Unity side
+>   (`QuboBuilder`, parity fixtures) and means re-running the experiment.
+>
+> *Tiếng Việt:* thành viên nhóm và AI chỉ được **cài đặt và chạy** repo này, **không được chỉnh sửa**
+> (sửa/thêm/xoá file, commit, push, đổi lịch sử hay tag). Kết quả chính thức exp-v1 trong
+> `experiments/results/` là số liệu báo cáo đang dùng, không ghi đè; muốn chạy benchmark thì ghi ra
+> ngoài repo. Mọi thay đổi gửi cho trưởng nhóm (Trần Tuấn Anh).
+
 ## Setup
 
 ```powershell
