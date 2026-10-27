@@ -29,6 +29,7 @@ from ..qubo.formulation import build_qubo, QuboProblem
 from ..solvers.base import Solution
 from ..solvers.brute_force import BruteForceSolver
 from ..solvers.exact import BranchAndBoundSolver
+from ..solvers.exact_set import SetAssignmentExactSolver
 from ..solvers.registry import get_solver, REGISTRY
 from ..version import code_version
 from .metrics import CSV_COLUMNS, approx_ratio, gap
@@ -58,6 +59,9 @@ class BenchRow:
     gap: float | None
     note: str = ""
     code_version: str = ""
+    evals: int | None = None
+    raw_feasible_samples: int | None = None
+    opt_method: str = ""
 
 
 def _density_of(inst: Instance) -> float:
@@ -99,22 +103,31 @@ def _existing_keys(path: Path) -> set[tuple[str, str, int]]:
 
 #: Seconds the branch-and-bound may spend proving the optimum of one instance too big for brute force.
 EXACT_TIME_LIMIT_S = 60.0
+#: Largest number of node sets the set reduction (solvers/exact_set.py) enumerates for a reference.
+EXACT_SET_MAX_SETS = 5_000_000
 
 
 def _optimum(inst: Instance, problem: QuboProblem, max_candidates: int,
-             cache: dict[str, tuple[float | None, float | None]]) -> tuple[float | None, float | None]:
-    """Brute force when the space is small, else branch and bound; None when not proven in time."""
+             cache: dict[str, tuple[float | None, float | None, str]]) -> tuple[float | None, float | None, str]:
+    """Proven optimum and how it was obtained: brute force when the space is small, else the set
+    reduction when Q has the node-only structure (exp-v2), else branch and bound; None when not
+    proven in time."""
     if inst.instance_id not in cache:
+        sol, method = None, ""
         if math.perm(problem.n_nodes, problem.n_agents) <= max_candidates:
-            sol = BruteForceSolver(max_candidates=max_candidates).solve(problem)
-        elif EXACT_TIME_LIMIT_S > 0:
-            sol = BranchAndBoundSolver(time_limit_s=EXACT_TIME_LIMIT_S).solve(problem)
-            if not sol.meta.get("proven_optimal"):
-                sol = None
+            sol, method = BruteForceSolver(max_candidates=max_candidates).solve(problem), "brute"
         else:
-            sol = None
-        cache[inst.instance_id] = ((sol.energy, objective(inst, sol.assignment, problem.weights))
-                                   if sol is not None else (None, None))
+            if EXACT_SET_MAX_SETS > 0:
+                try:
+                    sol, method = SetAssignmentExactSolver(max_sets=EXACT_SET_MAX_SETS).solve(problem), "exact_set"
+                except ValueError:
+                    sol = None
+            if sol is None and EXACT_TIME_LIMIT_S > 0:
+                sol, method = BranchAndBoundSolver(time_limit_s=EXACT_TIME_LIMIT_S).solve(problem), "exact"
+                if not sol.meta.get("proven_optimal"):
+                    sol, method = None, ""
+        cache[inst.instance_id] = ((sol.energy, objective(inst, sol.assignment, problem.weights), method)
+                                   if sol is not None else (None, None, ""))
     return cache[inst.instance_id]
 
 
@@ -148,7 +161,7 @@ def run_suite(spec: SuiteSpec, solvers: Iterable[str], repeats: int = 1,
             weights = getattr(inst, "weights", None) or spec.weights
             problem = build_qubo(inst, weights)
             dens = _density_of(inst)
-            opt_e, opt_f = _optimum(inst, problem, spec.brute_force_max_candidates, opt_cache)
+            opt_e, opt_f, opt_method = _optimum(inst, problem, spec.brute_force_max_candidates, opt_cache)
             for sname in solvers:
                 solver = get_solver(sname)
                 for r in range(repeats):
@@ -173,6 +186,9 @@ def run_suite(spec: SuiteSpec, solvers: Iterable[str], repeats: int = 1,
                         opt_energy=opt_e, opt_objective=opt_f,
                         approx_ratio=approx_ratio(f_sol, opt_f), gap=gap(sol.energy, opt_e), note=note,
                         code_version=version,
+                        evals=sol.meta.get("samples_evaluated"),
+                        raw_feasible_samples=sol.meta.get("raw_feasible_samples"),
+                        opt_method=opt_method,
                     )
                     w.writerow(asdict(row))
                     f.flush()

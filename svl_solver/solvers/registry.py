@@ -3,11 +3,14 @@ and what telemetry records as ``ai_variant``."""
 
 from __future__ import annotations
 
+from .assignment import AssignmentAnnealingSolver, GreedyLocalSearchSolver, TabuSolver
 from .base import Solver
 from .brute_force import BruteForceSolver
 from .exact import BranchAndBoundSolver
+from .exact_set import SetAssignmentExactSolver
 from .ga import GeneticSolver
 from .greedy import GreedySolver
+from .pbil import PbilSolver
 from .planned import DWaveQpuSolver
 from .qaoa import QaoaSolver
 from .qiea import QuantumInspiredEvolutionarySolver
@@ -24,9 +27,15 @@ REGISTRY: dict[str, type[Solver]] = {
     "qiea": QuantumInspiredEvolutionarySolver,
     "qaoa": QaoaSolver,
     "qpu": DWaveQpuSolver,
+    # exp-v2 (review M3/M4): assignment-space baselines, the Q-bit ablation, the set-reduction optimum.
+    "ls": GreedyLocalSearchSolver,
+    "tabu": TabuSolver,
+    "sa1h": AssignmentAnnealingSolver,
+    "pbil": PbilSolver,
+    "exact_set": SetAssignmentExactSolver,
 }
 
-CLASSICAL = ("greedy", "ga", "sa", "brute", "exact")
+CLASSICAL = ("greedy", "ga", "sa", "brute", "exact", "ls", "tabu", "sa1h", "pbil", "exact_set")
 QUANTUM_INSPIRED = ("sqa", "qiea", "qaoa", "qpu")
 
 

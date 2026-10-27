@@ -19,6 +19,8 @@ CSV_COLUMNS = [
     "timestamp", "suite", "instance_id", "seed", "n_nodes", "n_agents", "density", "n_vars",
     "solver", "repeat", "budget_ms", "feasible_raw", "energy", "objective", "latency_ms",
     "hit_budget", "opt_energy", "opt_objective", "approx_ratio", "gap", "note", "code_version",
+    # exp-v2: search effort and raw feasibility per run, and how the reference was obtained.
+    "evals", "raw_feasible_samples", "opt_method",
 ]
 
 

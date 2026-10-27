@@ -1,0 +1,70 @@
+{
+ "best": {
+  "pbil": {
+   "default_mean_gap": 0.0041727597750384916,
+   "mean_gap": 0.002294111731720419,
+   "params": {
+    "learning_rate": 0.2035247107073545,
+    "margin": 0.020282716459826305,
+    "samples": 29
+   },
+   "trial": 6
+  },
+  "sa1h": {
+   "default_mean_gap": 0.008955886543210397,
+   "mean_gap": 0.0033067412274066783,
+   "params": {
+    "p_end": 1.9703643045800874e-05,
+    "p_start": 0.42358810426331317,
+    "swap_share": 0.3977768026613093
+   },
+   "trial": 29
+  },
+  "tabu": {
+   "default_mean_gap": 4.715123864245829e-05,
+   "mean_gap": 1.8975558398454302e-16,
+   "params": {
+    "kick": 4,
+    "restart_after": 52,
+    "tenure_max": 1.2499787593628746,
+    "tenure_min": 0.765907102735838
+   },
+   "trial": 9
+  }
+ },
+ "code_version": "0.1.0+adc1ea6.dirty",
+ "protocol": {
+  "budget_ms": 120,
+  "finalists": 3,
+  "instances": [
+   "Map 1-b3786af4d42c-3",
+   "Map 1-a27bbc42292e-4",
+   "Map 1-ddc9c653fea5-7",
+   "Map 1-e80d9856e0d2-4",
+   "Map 1-aa9c7745ea4e-5",
+   "Map 1-c7a46bec6c37-4",
+   "Map 1-1145b3424b2a-6",
+   "Map 1-849425028547-4",
+   "Map 1-0e436e8a7f2f-6",
+   "Map 1-c55694b999c7-4",
+   "Map 1-37690c752af5-4",
+   "Map 1-26495f91890e-4",
+   "Map 1-ffc5de5e4a9f-4",
+   "Map 1-a2a863a27047-5",
+   "Map 1-2541b92d95b4-4",
+   "Map 1-7d390d1b0a8d-3",
+   "svl-n20-a4-c0.00-s901",
+   "svl-n40-a4-c0.00-s902",
+   "svl-n60-a4-c0.00-s903",
+   "svl-n20-a6-c0.00-s904",
+   "svl-n40-a6-c0.00-s905",
+   "svl-n60-a6-c0.00-s906",
+   "svl-n20-a8-c0.00-s907",
+   "svl-n40-a8-c0.00-s908"
+  ],
+  "repeats": 3,
+  "seed": 2026,
+  "trials": 30
+ },
+ "proven_optimum": 13
+}

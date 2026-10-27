@@ -50,6 +50,11 @@ SPACES: dict[str, dict[str, tuple]] = {
             "gamma_start": ("log", 0.1, 10.0), "gamma_end": ("log", 0.001, 0.2)},
     "qiea": {"population": ("int_log", 2, 32), "delta": ("log", 0.005, 0.2),
              "margin": ("float", 0.01, 0.3)},
+    # exp-v2: the same 30 trials for the solvers added after the review.
+    "tabu": {"tenure_min": ("float", 0.2, 1.5), "tenure_max": ("float", 0.5, 3.0),
+             "restart_after": ("int_log", 20, 2000), "kick": ("int", 1, 4)},
+    "sa1h": {"p_start": ("log", 0.05, 0.9), "p_end": ("log", 1e-5, 0.05), "swap_share": ("float", 0.0, 0.6)},
+    "pbil": {"samples": ("int_log", 2, 64), "learning_rate": ("log", 0.01, 0.5), "margin": ("float", 0.005, 0.2)},
 }
 
 

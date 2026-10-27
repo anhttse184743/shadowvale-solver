@@ -31,7 +31,7 @@ from pathlib import Path
 
 import numpy as np
 
-from svl_solver.bench.stats import compare, holm
+from svl_solver.bench.stats import compare, holm, mcnemar_exact
 
 #: Metrics that make sense per run, with the direction that is better for the *guards*.
 METRICS = {
@@ -116,6 +116,16 @@ def compare_variants(rows: list[dict], a: str, b: str, bot: str | None = None, m
     as_bench = [{"solver": r["variant"], "instance_id": f'{r["bot"]}-{r["seed"]}', "repeat": 0, metric: r.get(metric)}
                 for r in use]
     res = compare(as_bench, a, b, metric=metric)
+    if metric == "captured" and res["n_pairs"]:
+        # Binary outcome on paired seeds: exact McNemar on the discordant pairs (exp-v2, review M7),
+        # not Wilcoxon. b = seeds only A captured, c = seeds only B captured.
+        va = {x["instance_id"]: float(x[metric]) for x in as_bench if x["solver"] == a}
+        vb = {x["instance_id"]: float(x[metric]) for x in as_bench if x["solver"] == b}
+        keys = set(va) & set(vb)
+        nb = sum(1 for k in keys if va[k] > .5 and vb[k] <= .5)
+        nc = sum(1 for k in keys if va[k] <= .5 and vb[k] > .5)
+        res.update(test="mcnemar", statistic=float(nb - nc), p_value=mcnemar_exact(nb, nc),
+                   discordant=(nb, nc))
     res["bot"] = bot or "all"
     res["better_for_guards"] = METRICS.get(metric, "higher")
     return res

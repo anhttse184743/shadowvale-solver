@@ -23,7 +23,9 @@ from typing import Sequence
 import numpy as np
 
 
-def _values(rows: list[dict], variant: str, metric: str) -> dict[tuple[str, int], float]:
+def _values(rows: list[dict], variant: str, metric: str, by_instance: bool = False) -> dict[tuple[str, int], float]:
+    """Metric per (instance, repeat); with ``by_instance`` the repeats of an instance are averaged
+    first, so the unit of analysis is the instance (exp-v2: repeats are not independent pairs)."""
     out = {}
     for r in rows:
         if r.get("solver") != variant:
@@ -32,7 +34,23 @@ def _values(rows: list[dict], variant: str, metric: str) -> dict[tuple[str, int]
         if v in (None, "", "None"):
             continue
         out[(str(r["instance_id"]), int(r["repeat"]))] = float(v)
+    if by_instance:
+        acc: dict[str, list[float]] = {}
+        for (iid, _), v in out.items():
+            acc.setdefault(iid, []).append(v)
+        out = {(iid, 0): float(np.mean(vs)) for iid, vs in acc.items()}
     return out
+
+
+def mcnemar_exact(b: int, c: int) -> float:
+    """Two-sided exact McNemar test for paired binary outcomes: ``b`` pairs where only A succeeded,
+    ``c`` where only B did. Binomial test of b against n = b + c at p = ½."""
+    n = b + c
+    if n == 0:
+        return 1.0
+    k = min(b, c)
+    tail = sum(math.comb(n, i) for i in range(k + 1)) / 2.0 ** n
+    return min(1.0, 2.0 * tail)
 
 
 def _norm_sf(z: float) -> float:
@@ -99,8 +117,9 @@ def bootstrap_ci(diffs: Sequence[float], reps: int = 2000, seed: int = 0, level:
     return float(lo), float(hi)
 
 
-def compare(rows: list[dict], variant_a: str, variant_b: str, metric: str = "approx_ratio") -> dict:
-    va, vb = _values(rows, variant_a, metric), _values(rows, variant_b, metric)
+def compare(rows: list[dict], variant_a: str, variant_b: str, metric: str = "approx_ratio",
+            by_instance: bool = False) -> dict:
+    va, vb = _values(rows, variant_a, metric, by_instance), _values(rows, variant_b, metric, by_instance)
     shared = sorted(set(va) & set(vb))
     paired = len(shared) > 0 and len(shared) == len(va) == len(vb)
     if paired:
@@ -145,9 +164,9 @@ def holm(p_values: Sequence[float]) -> list[float]:
     return adjusted
 
 
-def compare_all(rows: list[dict], variants: Sequence[str], metric: str = "gap") -> list[dict]:
+def compare_all(rows: list[dict], variants: Sequence[str], metric: str = "gap", by_instance: bool = False) -> list[dict]:
     """Every pair of ``variants`` compared with :func:`compare`, plus ``p_holm`` over the family."""
-    results = [compare(rows, a, b, metric=metric)
+    results = [compare(rows, a, b, metric=metric, by_instance=by_instance)
                for i, a in enumerate(variants) for b in variants[i + 1:]]
     for r, p in zip(results, holm([r["p_value"] for r in results])):
         r["p_holm"] = p

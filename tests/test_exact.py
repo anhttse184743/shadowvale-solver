@@ -47,5 +47,6 @@ def test_time_limit_returns_the_best_so_far_unproven():
 def test_bench_uses_it_for_the_optimum_of_recorded_game_instances():
     inst = load_records(Path(__file__).parent / "fixtures" / "game_record.jsonl")[0]
     p = build_qubo(inst, inst.weights)
-    e, f = _optimum(inst, p, max_candidates=1000, cache={})   # forced past brute force
+    e, f, method = _optimum(inst, p, max_candidates=1000, cache={})   # forced past brute force
     assert e == pytest.approx(BruteForceSolver().solve(p).energy, abs=1e-9)
+    assert method == "exact_set", "recorded game QUBOs have the node-only structure (exp-v2)"

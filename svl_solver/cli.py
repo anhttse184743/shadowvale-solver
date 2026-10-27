@@ -25,7 +25,8 @@ from .instances.game_records import load_records
 from .instances.generator import generate
 from .instances.suite import SuiteSpec
 from .instances.io import save_instance, to_qubo_request
-from .instances.suite import BUILTIN_SUITES, load_suite
+from .instances.suite import BUILTIN_SUITES, iter_instances, load_suite
+from .version import code_version
 from .solvers.registry import list_variants
 
 
@@ -238,6 +239,46 @@ def _cmd_movingai(a: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_qaoa_study(a: argparse.Namespace) -> int:
+    """QAOA read from the statevector against uniform sampling, standard and XY mixer (exp-v2)."""
+    from svl_solver.bench.qaoa_study import study_x, study_xy
+    from svl_solver.instances.generator import generate
+    from svl_solver.qubo.formulation import build_qubo
+
+    spec = load_suite(a.suite)
+    problems = [build_qubo(inst, spec.weights) for inst in iter_instances(spec)]
+    for n, ag in [tuple(int(v) for v in s.split("x")) for s in a.extra.split(",") if s]:
+        for seed in range(1, a.extra_seeds + 1):
+            inst = generate(seed=seed, n_nodes=n, n_agents=ag, chokepoint_density=0.3)
+            problems.append(build_qubo(inst, spec.weights))
+    out = Path(a.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    rows_written = 0
+    with open(out, "w", newline="", encoding="utf-8") as f:
+        w = None
+        for p in problems:
+            rows = []
+            if p.n_vars <= a.max_qubits:
+                rows += study_x(p, a.layers)
+            try:
+                rows += study_xy(p, a.layers)
+            except ValueError:
+                pass
+            for r in rows:
+                r["code_version"] = code_version()
+                if w is None:
+                    w = csv.DictWriter(f, fieldnames=list(r))
+                    w.writeheader()
+                w.writerow(r)
+                rows_written += 1
+            f.flush()
+            if rows:
+                print(f"{p.instance_id}: n={p.n_vars} " + "  ".join(
+                    f"{r['ansatz']}/p{r['layers']} P_opt={r['p_opt']:.4f}" for r in rows if r["layers"] == a.layers))
+    print(f"{rows_written} rows -> {out}")
+    return 0
+
+
 def _cmd_tune(a: argparse.Namespace) -> int:
     import numpy as np
     from svl_solver.bench.tune import is_tuning_instance, tune, write_report
@@ -339,6 +380,15 @@ def bench_main(argv: list[str] | None = None) -> None:
     ma.add_argument("--vision", type=float, default=14.0)
     ma.add_argument("--out", default="datasets/derived/movingai.jsonl")
     ma.set_defaults(fn=_cmd_movingai)
+
+    qs = sub.add_parser("qaoa-study", help="QAOA statevector vs uniform sampling, standard and XY mixer (exp-v2)")
+    qs.add_argument("--suite", default="experiments/configs/small.yaml")
+    qs.add_argument("--layers", type=int, default=3)
+    qs.add_argument("--max-qubits", type=int, default=18, help="largest n for the full statevector (standard mixer)")
+    qs.add_argument("--extra", default="10x4,12x4,8x5", help="generated NxA sizes for the XY ansatz only")
+    qs.add_argument("--extra-seeds", type=int, default=10)
+    qs.add_argument("--out", required=True)
+    qs.set_defaults(fn=_cmd_qaoa_study)
 
     tn = sub.add_parser("tune", help="equal-effort hyper-parameter search for the stochastic solvers")
     tn.add_argument("--solvers", default="ga,sa,sqa,qiea")
