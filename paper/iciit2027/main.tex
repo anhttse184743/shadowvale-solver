@@ -1,4 +1,5 @@
-%% ICIIT 2027 full paper — ACM proceedings template (acmart v1.90a, sigconf; acmart.cls and the .bst are the conference's copies).
+%% ICIIT 2027 full paper — ACM proceedings template (acmart, sigconf; the conference's .bst; Overleaf's acmart, as the
+%% conference's acmart.cls v1.90a breaks with hyperxmp on TeX Live 2026).
 %% Compile on Overleaf (pdfLaTeX). Numbers: shadowvale-solver, tag exp-v2 (experiments/results/exp-v2).
 \documentclass[sigconf]{acmart}
 
@@ -12,7 +13,7 @@
 
 \begin{document}
 
-\title{Do Quantum-Inspired Solvers Help Real-Time NPC Squad Coordination?\\
+\title{Do Quantum-Inspired Solvers Help Real-Time NPC Squad Coordination?\texorpdfstring{\\}{ }
 A Reproducible QUBO Benchmark in a Game Testbed}
 
 \author{Tran Tuan Anh}
@@ -233,6 +234,7 @@ bit samples almost never are (0 and 15\,\%).
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/full_quality.pdf}
+\Description{Three panels, for 4, 8 and 12 agents, plot each solver's mean optimality gap on a log scale against the number of nodes; tabu search is lowest, bit-flip SA and SQA highest.}
 \caption{Full suite: mean gap per instance by number of nodes, one panel per number of agents
 (log scale; error bars: bootstrap 95\,\% CI; a gap of 0 is drawn at $10^{-3}$\,\%).}
 \label{fig:full}
@@ -267,6 +269,7 @@ an optimal one. $P_\text{opt}$/uniform: median ratio to sampling valid assignmen
 hit$_{512}$: probability that 512 shots contain the optimum, for QAOA and for 512 uniformly drawn
 valid assignments. X: standard mixer; XY: ring-XY mixer in the one-hot sector.}
 \label{tab:qaoa}
+\setlength{\tabcolsep}{3pt}
 \input{tables/qaoa.tex}
 \end{table}
 
@@ -287,6 +290,7 @@ optimum stays at 0.13--1.14 times the uniform one and its 512-shot hit rate neve
 \caption{Capture rate (\%) per exploit bot and coordination variant on the final build, 100
 paired seeds per cell, with Wilson 95\,\% intervals. \emph{none}: no plans, FSM only.}
 \label{tab:replay}
+\setlength{\tabcolsep}{2.5pt}
 \input{tables/replay.tex}
 \end{table}
 
