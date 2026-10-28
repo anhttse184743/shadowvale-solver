@@ -1,0 +1,17 @@
+[Calibrate] same_route knob 11.5: capture 50 %, HP left 6.2
+[Calibrate] same_route knob 12: capture 60 %, HP left 10.2
+[Calibrate] same_route knob 12.5: capture 70 %, HP left 8.2
+[Calibrate] same_route: closest to 50 % capture at knob 11.5
+[Calibrate] same_bush knob 6.5: capture 60 %, HP left 11.9
+[Calibrate] same_bush knob 7: capture 60 %, HP left 3.5
+[Calibrate] same_bush knob 7.5: capture 80 %, HP left 1.7
+[Calibrate] same_bush: closest to 50 % capture at knob 6.5
+[Calibrate] stone_lure knob 3: capture 0 %, HP left 28.6
+[Calibrate] stone_lure knob 5: capture 20 %, HP left 16.3
+[Calibrate] stone_lure knob 6.5: capture 60 %, HP left 7.6
+[Calibrate] stone_lure knob 7.5: capture 60 %, HP left 3.4
+[Calibrate] stone_lure knob 9: capture 70 %, HP left 1.8
+[Calibrate] stone_lure knob 11: capture 90 %, HP left 0.1
+[Calibrate] stone_lure knob 13: capture 90 %, HP left 0.3
+[Calibrate] stone_lure: closest to 50 % capture at knob 6.5
+[Calibrate] C:/Users/anhtr/AppData/LocalLow/DefaultCompany/ShadowVale\research\replay-calibration-20261028-053435.json

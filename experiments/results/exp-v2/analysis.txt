@@ -1,0 +1,310 @@
+game: 3447 instances; optimum by [('brute', 51975), ('exact_set', 41094)]
+
+== recorded game instances (120 ms), gap to proven optimum
+solver      inst    gap%              CI95  atopt%   p50ms   p95ms overBud%    evals rawfeas% ansFeas%
+Greedy      3447   2.759 [ 2.646, 2.870]    39.5    0.13    0.51      0.0      nan    100.0    100.0
+Greedy+LS   3447   0.275 [ 0.253, 0.296]    74.7    0.40    1.34      0.0      144    100.0    100.0
+Tabu        3447   0.000 [ 0.000, 0.000]    99.9   96.08   96.41      0.8    77550    100.0    100.0
+GA          3447   0.107 [ 0.099, 0.115]    78.2   96.06   97.36      1.2     1966    100.0    100.0
+SA (bits)   3447   3.905 [ 3.771, 4.034]    34.7   98.90  106.38      1.8      136    100.0    100.0
+SA-1h       3447   0.087 [ 0.080, 0.094]    80.3   95.90   97.41      0.9     2854    100.0    100.0
+PBIL        3447   0.036 [ 0.033, 0.040]    90.4   96.05   96.25      1.0     1474     14.6    100.0
+SQA         3447   4.102 [ 3.968, 4.239]    33.0   83.99   98.74      0.9      640     63.0    100.0
+QIEA        3447   0.108 [ 0.099, 0.117]    82.1   96.06   96.71      1.3     1028      0.0    100.0
+
+-- game: per-instance Wilcoxon, Holm over 12 pairs (diff = A - B in pp of gap)
+        Tabu vs Greedy     n= 3447 diff -2.759 pp [-2.873,-2.639] p=0 p_holm=0
+        Tabu vs Greedy+LS  n= 3447 diff -0.275 pp [-0.296,-0.253] p=1.5e-144 p_holm=6e-144
+        Tabu vs GA         n= 3447 diff -0.107 pp [-0.115,-0.099] p=1.8e-198 p_holm=1.3e-197
+        Tabu vs SA (bits)  n= 3447 diff -3.905 pp [-4.037,-3.771] p=0 p_holm=0
+        Tabu vs SA-1h      n= 3447 diff -0.086 pp [-0.094,-0.080] p=6.8e-187 p_holm=4.1e-186
+        Tabu vs PBIL       n= 3447 diff -0.036 pp [-0.040,-0.033] p=7.2e-112 p_holm=2.1e-111
+        Tabu vs SQA        n= 3447 diff -4.102 pp [-4.236,-3.970] p=0 p_holm=0
+        Tabu vs QIEA       n= 3447 diff -0.108 pp [-0.117,-0.099] p=2e-147 p_holm=9.9e-147
+        QIEA vs PBIL       n= 3447 diff +0.072 pp [+0.064,+0.079] p=2e-84 p_holm=4e-84
+        QIEA vs GA         n= 3447 diff +0.001 pp [-0.009,+0.010] p=0.42 p_holm=0.42
+   Greedy+LS vs Greedy     n= 3447 diff -2.485 pp [-2.595,-2.372] p=0 p_holm=0
+       SA-1h vs SA (bits)  n= 3447 diff -3.819 pp [-3.948,-3.685] p=0 p_holm=0
+
+full suite: 1350 instances, proven optimum on 630, 2 s reference on 720; 120 ms runs beating the 2 s reference: 0
+
+== full suite (120 ms), gap to proven optimum or independent 2 s reference
+solver      inst    gap%              CI95  atopt%   p50ms   p95ms overBud%    evals rawfeas% ansFeas%
+Greedy      1350   8.180 [ 7.922, 8.454]     3.6    3.31   94.20      0.6      nan    100.0    100.0
+Greedy+LS   1350   1.320 [ 1.167, 1.486]    47.2    5.51  110.75      1.7     1632    100.0    100.0
+Tabu        1350   0.777 [ 0.634, 0.937]    88.0   96.24  113.42      2.4   211680    100.0    100.0
+GA          1350   2.698 [ 2.523, 2.882]    27.1   96.07  107.14      1.7     1476    100.0    100.0
+SA (bits)   1350  29.522 [28.770,30.240]     0.1  165.43 1239.33     58.2        8    100.0    100.0
+SA-1h       1350   2.748 [ 2.573, 2.932]    23.7   95.94  120.27      5.1     2306    100.0    100.0
+PBIL        1350   2.139 [ 1.986, 2.302]    37.7   96.22  107.15      2.2      574      1.1    100.0
+SQA         1350  32.302 [31.379,33.220]     0.0   93.78  382.58     34.2       96     51.8    100.0
+QIEA        1350   2.187 [ 2.037, 2.345]    32.5   96.24  107.09      2.3      479      0.0    100.0
+
+-- full suite: per-instance Wilcoxon, Holm over 10 pairs (diff = A - B in pp of gap)
+        Tabu vs Greedy     n= 1350 diff -7.403 pp [-7.695,-7.131] p=1.2e-198 p_holm=1e-197
+        Tabu vs Greedy+LS  n= 1350 diff -0.543 pp [-0.625,-0.460] p=1.6e-79 p_holm=4.8e-79
+        Tabu vs GA         n= 1350 diff -1.921 pp [-2.051,-1.794] p=4.5e-163 p_holm=2.7e-162
+        Tabu vs SA (bits)  n= 1350 diff -28.746 pp [-29.487,-28.032] p=2.9e-222 p_holm=2.9e-221
+        Tabu vs SA-1h      n= 1350 diff -1.971 pp [-2.105,-1.842] p=4.2e-170 p_holm=3e-169
+        Tabu vs PBIL       n= 1350 diff -1.363 pp [-1.472,-1.257] p=1.5e-123 p_holm=6.1e-123
+        Tabu vs SQA        n= 1350 diff -31.525 pp [-32.452,-30.644] p=2.9e-222 p_holm=2.9e-221
+        Tabu vs QIEA       n= 1350 diff -1.411 pp [-1.507,-1.312] p=2.1e-130 p_holm=1e-129
+        QIEA vs PBIL       n= 1350 diff +0.048 pp [-0.005,+0.102] p=0.27 p_holm=0.27
+        QIEA vs GA         n= 1350 diff -0.510 pp [-0.611,-0.407] p=5.9e-20 p_holm=1.2e-19
+
+full suite: mean gap % by (A, N) [95% CI]
+  A=4: Greedy:7.72,8.43,7.57,6.81,7.62  Greedy+LS:0.54,1.24,0.42,0.47,0.77  Tabu:0.00,0.00,0.00,0.00,0.00  GA:0.15,0.53,0.60,0.75,1.16  SA (bits):8.69,15.84,21.88,35.93,39.25  SA-1h:0.01,0.23,0.39,0.89,1.20  PBIL:0.01,0.07,0.06,0.08,0.07  SQA:8.85,15.71,21.69,30.68,35.94  QIEA:0.10,0.14,0.10,0.22,0.07
+  A=8: Greedy:7.21,8.84,8.54,9.58,9.31  Greedy+LS:0.47,0.73,0.49,0.78,0.77  Tabu:0.00,0.00,0.02,0.07,0.03  GA:0.57,1.27,1.25,2.95,3.58  SA (bits):14.24,29.83,35.47,40.85,46.05  SA-1h:0.71,1.36,2.08,3.87,5.52  PBIL:0.40,0.92,1.60,2.58,2.36  SQA:15.68,25.42,37.32,48.54,57.19  QIEA:1.48,1.69,1.94,2.29,1.82
+  A=12: Greedy:7.92,7.52,7.86,8.14,9.63  Greedy+LS:0.37,0.40,0.70,2.42,9.22  Tabu:0.00,0.02,0.14,2.01,9.36  GA:2.41,3.36,4.42,7.82,9.63  SA (bits):16.28,27.45,31.81,36.06,43.22  SA-1h:1.83,2.44,3.46,7.59,9.63  PBIL:2.05,3.35,4.39,5.06,9.10  SQA:17.14,30.76,40.93,45.98,52.71  QIEA:2.83,2.49,3.60,5.02,9.02
+full suite: share of runs over the 120 ms budget, by solver: Greedy 0.6%, Greedy+LS 1.7%, Tabu 2.4%, GA 1.7%, SA (bits) 58.2%, SA-1h 5.1%, PBIL 2.2%, SQA 34.2%, QIEA 2.3%
+
+== Moving AI (120 ms), gap to proven optimum
+solver      inst    gap%              CI95  atopt%   p50ms   p95ms overBud%    evals rawfeas% ansFeas%
+Greedy       342  10.196 [ 9.595,10.846]     0.3    0.33    0.87      0.0      nan    100.0    100.0
+Greedy+LS    342   0.504 [ 0.430, 0.587]    45.0    1.04    2.14      0.0     1024    100.0    100.0
+Tabu         342   0.002 [ 0.000, 0.005]    99.0   96.09   96.47      1.1   118808    100.0    100.0
+GA           342   0.563 [ 0.498, 0.626]    42.2   96.06   97.06      0.6     1826    100.0    100.0
+SA (bits)    342   9.062 [ 8.562, 9.571]     0.0  100.43  108.07      1.9       80    100.0    100.0
+SA-1h        342   0.500 [ 0.441, 0.560]    43.4   95.73   97.07      1.1     2820    100.0    100.0
+PBIL         342   0.860 [ 0.751, 0.985]    39.0   96.08   96.33      0.8      950      3.3    100.0
+SQA          342   9.764 [ 9.180,10.376]     0.3   83.32   98.90      0.9      384     69.8    100.0
+QIEA         342   2.570 [ 2.270, 2.886]    15.5   96.07   96.27      0.6      770      0.0    100.0
+
+== QAPLIB n<=30 (120 ms), gap to published optimum
+solver      inst    gap%              CI95  atopt%   p50ms   p95ms overBud%    evals rawfeas% ansFeas%
+Greedy        76  73.099 [47.745,110.214]     2.6    6.16  130.53      8.3      nan    100.0    100.0
+Greedy+LS     76  15.325 [10.823,20.581]     6.6   15.74  151.79     10.9      nan    100.0    100.0
+Tabu          76   7.469 [ 4.228,11.244]    31.1   96.25  139.38     11.7      nan    100.0    100.0
+GA            76  19.748 [14.188,26.071]     8.4   96.08  134.75     10.1      nan    100.0    100.0
+SA (bits)     76  66.100 [47.626,86.921]     0.3  109.05  814.11     41.3      nan    100.0    100.0
+SA-1h         76  16.071 [11.058,21.718]    13.2   95.69  145.28     12.7      nan    100.0    100.0
+PBIL          76  28.498 [20.960,36.992]     5.0   96.28  139.00     11.2      nan    100.0    100.0
+SQA           76  92.197 [65.364,123.284]     0.0   89.16  489.19     30.1      nan     59.5     59.5
+QIEA          76  26.352 [19.863,33.371]     6.6   96.29  147.62     11.7      nan    100.0    100.0
+
+== QAPLIB n<=30 (1000 ms), gap to published optimum
+solver      inst    gap%              CI95  atopt%   p50ms   p95ms overBud%    evals rawfeas% ansFeas%
+Greedy        76  73.099 [47.745,110.214]     2.6    4.37   91.14      0.0      nan    100.0    100.0
+Greedy+LS     76  10.408 [ 7.256,13.923]     6.6   12.60  100.59      0.0      nan    100.0    100.0
+Tabu          76   1.498 [ 0.661, 2.769]    51.8  800.20  800.64      0.0      nan    100.0    100.0
+GA            76   9.499 [ 6.666,12.633]    13.2  284.70  411.28      0.0      nan    100.0    100.0
+SA (bits)     76  46.645 [32.575,62.548]     0.3  809.92  853.03      0.0      nan    100.0    100.0
+SA-1h         76   5.174 [ 3.044, 7.626]    26.6  799.67  800.83      0.0      nan    100.0    100.0
+PBIL          76  13.051 [ 9.365,17.325]    14.5  800.24  800.83      0.0      nan    100.0    100.0
+SQA           76  63.859 [45.099,84.758]     0.3  573.50  803.55      0.0      nan     94.5     94.5
+QIEA          76  14.794 [11.049,19.025]    12.6  599.43  800.69      0.0      nan    100.0    100.0
+
+== small suite (120 ms), gap to optimum
+solver      inst    gap%              CI95  atopt%   p50ms   p95ms overBud%    evals rawfeas% ansFeas%
+Greedy       180   4.357 [ 3.615, 5.133]    28.9    0.03    0.08      0.0      nan    100.0    100.0
+Greedy+LS    180   0.478 [ 0.293, 0.686]    81.1    0.16    0.43      0.0       40    100.0    100.0
+Tabu         180   0.000 [ 0.000, 0.000]   100.0   96.05   96.18      0.0    34125    100.0    100.0
+GA           180   0.009 [ 0.003, 0.018]    98.4   96.03   96.48      0.0     3226    100.0    100.0
+SA (bits)    180   0.082 [ 0.048, 0.122]    94.7   96.67   98.04      0.0      512    100.0    100.0
+SA-1h        180   0.000 [ 0.000, 0.000]   100.0   95.90   96.74      0.0     4991    100.0    100.0
+PBIL         180   0.002 [ 0.000, 0.006]    99.8   96.03   96.14      0.0     2342     57.9    100.0
+SQA          180   0.140 [ 0.091, 0.193]    92.3   70.46   96.38      0.0     3832     90.5    100.0
+QIEA         180   0.004 [ 0.000, 0.012]    99.7   96.02   96.13      0.0     1904      1.7    100.0
+QAOA          90  13.510 [11.204,15.827]    35.8  172.98  736.71     66.9      512      5.7     48.7
+QAOA by size (runs, raw feasible %, at optimum %, p50 ms):
+  n=12: 150 runs, raw feasible 100%, at optimum 94.0%, p50 103 ms
+  n=16: 150 runs, raw feasible 30%, at optimum 7.3%, p50 173 ms
+  n=18: 150 runs, raw feasible 16%, at optimum 6.0%, p50 568 ms
+
+== QAOA study (statevector; means over instances)
+ansatz   n  p inst    P_opt  P_feas unifP_opt unifFeasP_opt  hit512 unif512 unifFeas512
+x       12  1   30   0.0095   0.242  2.77e-04        0.0378   0.989   0.131       1.000
+x       12  2   30   0.0076   0.173  2.77e-04        0.0378   0.973   0.131       1.000
+x       12  3   30   0.0144   0.352  2.77e-04        0.0378   0.998   0.131       1.000
+x       16  1   30   0.0049   0.228  1.78e-05        0.0208   0.900   0.009       1.000
+x       16  2   30   0.0061   0.283  1.78e-05        0.0208   0.942   0.009       1.000
+x       16  3   30   0.0075   0.341  1.78e-05        0.0208   0.968   0.009       1.000
+x       18  1   30   0.0011   0.110  4.45e-06        0.0097   0.433   0.002       0.988
+x       18  2   30   0.0015   0.140  4.45e-06        0.0097   0.520   0.002       0.988
+x       18  3   30   0.0018   0.169  4.45e-06        0.0097   0.593   0.002       0.988
+xy      12  1   30   0.0388   0.997  2.77e-04        0.0378   1.000   0.131       1.000
+xy      12  2   30   0.0440   0.996  2.77e-04        0.0378   1.000   0.131       1.000
+xy      12  3   30   0.0519   0.997  2.77e-04        0.0378   1.000   0.131       1.000
+xy      16  1   30   0.0169   0.968  1.78e-05        0.0208   0.922   0.009       1.000
+xy      16  2   30   0.0171   0.966  1.78e-05        0.0208   0.978   0.009       1.000
+xy      16  3   30   0.0243   0.967  1.78e-05        0.0208   0.990   0.009       1.000
+xy      18  1   30   0.0071   0.819  4.45e-06        0.0097   0.941   0.002       0.988
+xy      18  2   30   0.0090   0.892  4.45e-06        0.0097   0.958   0.002       0.988
+xy      18  3   30   0.0103   0.953  4.45e-06        0.0097   0.980   0.002       0.988
+xy      20  1   30   0.0122   0.966  1.11e-06        0.0130   0.828   0.001       0.997
+xy      20  2   30   0.0115   0.966  1.11e-06        0.0130   0.913   0.001       0.997
+xy      20  3   30   0.0130   0.966  1.11e-06        0.0130   0.902   0.001       0.997
+xy      24  1   30   0.0032   0.791  7.35e-08        0.0037   0.760   0.000       0.813
+xy      24  2   30   0.0032   0.900  7.35e-08        0.0037   0.680   0.000       0.813
+xy      24  3   30   0.0032   0.853  7.35e-08        0.0037   0.672   0.000       0.813
+xy      30  1   30   0.0014   0.769  1.18e-09        0.0018   0.460   0.000       0.561
+xy      30  2   30   0.0017   0.830  1.18e-09        0.0018   0.467   0.000       0.561
+xy      30  3   30   0.0013   0.850  1.18e-09        0.0018   0.441   0.000       0.561
+xy      40  1   20   0.0001   0.428  1.46e-12        0.0003   0.059   0.000       0.127
+xy      40  2   20   0.0001   0.495  1.46e-12        0.0003   0.067   0.000       0.127
+xy      40  3   20   0.0002   0.568  1.46e-12        0.0003   0.071   0.000       0.127
+xy      48  1   10   0.0001   0.632  6.39e-15        0.0002   0.042   0.000       0.074
+xy      48  2   10   0.0001   0.699  6.39e-15        0.0002   0.041   0.000       0.074
+xy      48  3   10   0.0001   0.829  6.39e-15        0.0002   0.046   0.000       0.074
+ratio P_opt / P_opt(uniform over valid assignments), median over instances:
+  x n=12 p=1: median 0.25  (share > 1: 0%)
+  x n=12 p=2: median 0.21  (share > 1: 0%)
+  x n=12 p=3: median 0.39  (share > 1: 0%)
+  x n=16 p=1: median 0.23  (share > 1: 0%)
+  x n=16 p=2: median 0.29  (share > 1: 0%)
+  x n=16 p=3: median 0.35  (share > 1: 0%)
+  x n=18 p=1: median 0.12  (share > 1: 0%)
+  x n=18 p=2: median 0.15  (share > 1: 0%)
+  x n=18 p=3: median 0.19  (share > 1: 0%)
+  xy n=12 p=1: median 1.05  (share > 1: 73%)
+  xy n=12 p=2: median 1.19  (share > 1: 83%)
+  xy n=12 p=3: median 1.13  (share > 1: 70%)
+  xy n=16 p=1: median 0.82  (share > 1: 43%)
+  xy n=16 p=2: median 0.79  (share > 1: 30%)
+  xy n=16 p=3: median 0.97  (share > 1: 47%)
+  xy n=18 p=1: median 0.85  (share > 1: 0%)
+  xy n=18 p=2: median 1.08  (share > 1: 50%)
+  xy n=18 p=3: median 1.14  (share > 1: 67%)
+  xy n=20 p=1: median 0.76  (share > 1: 43%)
+  xy n=20 p=2: median 0.65  (share > 1: 30%)
+  xy n=20 p=3: median 0.95  (share > 1: 50%)
+  xy n=24 p=1: median 0.98  (share > 1: 47%)
+  xy n=24 p=2: median 0.66  (share > 1: 27%)
+  xy n=24 p=3: median 0.60  (share > 1: 33%)
+  xy n=30 p=1: median 0.71  (share > 1: 33%)
+  xy n=30 p=2: median 0.85  (share > 1: 40%)
+  xy n=30 p=3: median 0.72  (share > 1: 30%)
+  xy n=40 p=1: median 0.35  (share > 1: 0%)
+  xy n=40 p=2: median 0.38  (share > 1: 0%)
+  xy n=40 p=3: median 0.17  (share > 1: 30%)
+  xy n=48 p=1: median 0.57  (share > 1: 0%)
+  xy n=48 p=2: median 0.55  (share > 1: 0%)
+  xy n=48 p=3: median 0.56  (share > 1: 40%)
+
+== replay: 1800 runs; game versions ['525ded19']
+  same_bush  ga     n=100 capture  54.0% [44.3,63.4] escape  14.6s coord 0.66 fallback 0.0% lat95 111ms
+  same_bush  greedy n=100 capture  43.0% [33.7,52.8] escape  14.8s coord 0.65 fallback 0.0% lat95 0ms
+  same_bush  ls     n=100 capture  48.0% [38.5,57.7] escape  14.9s coord 0.66 fallback 0.0% lat95 16ms
+  same_bush  none   n=100 capture  51.0% [41.3,60.6] escape  10.4s coord 0.00 fallback 0.0% lat95 0ms
+  same_bush  qiea   n=100 capture  53.0% [43.3,62.5] escape  14.7s coord 0.66 fallback 0.0% lat95 111ms
+  same_bush  sqa    n=100 capture  54.0% [44.3,63.4] escape  14.7s coord 0.67 fallback 0.0% lat95 100ms
+  same_route ga     n=100 capture  60.0% [50.2,69.1] escape  15.2s coord 0.70 fallback 0.0% lat95 110ms
+  same_route greedy n=100 capture  41.0% [31.9,50.8] escape  15.0s coord 0.70 fallback 0.0% lat95 0ms
+  same_route ls     n=100 capture  77.0% [67.8,84.2] escape  15.0s coord 0.70 fallback 0.0% lat95 16ms
+  same_route none   n=100 capture  77.0% [67.8,84.2] escape  13.3s coord 0.00 fallback 0.0% lat95 0ms
+  same_route qiea   n=100 capture  76.0% [66.8,83.3] escape  15.2s coord 0.70 fallback 0.0% lat95 110ms
+  same_route sqa    n=100 capture  49.0% [39.4,58.7] escape  15.1s coord 0.69 fallback 0.0% lat95 98ms
+  stone_lure ga     n=100 capture  47.0% [37.5,56.7] escape   9.9s coord 0.70 fallback 0.0% lat95 110ms
+  stone_lure greedy n=100 capture  60.0% [50.2,69.1] escape  12.2s coord 0.73 fallback 0.0% lat95 0ms
+  stone_lure ls     n=100 capture  45.0% [35.6,54.8] escape  10.2s coord 0.70 fallback 0.0% lat95 16ms
+  stone_lure none   n=100 capture  34.0% [25.5,43.7] escape   9.4s coord 0.00 fallback 0.0% lat95 0ms
+  stone_lure qiea   n=100 capture  54.0% [44.3,63.4] escape  10.0s coord 0.71 fallback 0.0% lat95 109ms
+  stone_lure sqa    n=100 capture  42.0% [32.8,51.8] escape   9.7s coord 0.69 fallback 0.0% lat95 98ms
+  same_bush  captured               ga 0.540 vs greedy 0.430 mcnemar p=0.0895 p_holm=0.716 discordant (23, 12)
+  same_bush  captured               ls 0.480 vs greedy 0.430 mcnemar p=0.383 p_holm=1 discordant (13, 8)
+  same_bush  captured             none 0.510 vs greedy 0.430 mcnemar p=0.169 p_holm=1 discordant (17, 9)
+  same_bush  captured             qiea 0.530 vs greedy 0.430 mcnemar p=0.143 p_holm=1 discordant (24, 14)
+  same_bush  captured              sqa 0.540 vs greedy 0.430 mcnemar p=0.0614 p_holm=0.553 discordant (20, 9)
+  same_bush  captured               ga 0.540 vs none   0.510 mcnemar p=0.743 p_holm=1 discordant (20, 17)
+  same_bush  captured               ls 0.480 vs none   0.510 mcnemar p=0.69 p_holm=1 discordant (11, 14)
+  same_bush  captured             qiea 0.530 vs none   0.510 mcnemar p=0.864 p_holm=1 discordant (18, 16)
+  same_bush  captured              sqa 0.540 vs none   0.510 mcnemar p=0.701 p_holm=1 discordant (15, 12)
+  same_bush  escape_time_mean       ga 6.732 vs greedy 8.460 wilcoxon p=0.465 p_holm=1
+  same_bush  escape_time_mean       ls 7.768 vs greedy 8.460 wilcoxon p=0.593 p_holm=1
+  same_bush  escape_time_mean     none 5.098 vs greedy 8.460 wilcoxon p=7.56e-06 p_holm=6.8e-05
+  same_bush  escape_time_mean     qiea 6.904 vs greedy 8.460 wilcoxon p=0.883 p_holm=1
+  same_bush  escape_time_mean      sqa 6.752 vs greedy 8.460 wilcoxon p=0.216 p_holm=0.864
+  same_bush  escape_time_mean       ga 6.732 vs none   5.098 wilcoxon p=0.0594 p_holm=0.297
+  same_bush  escape_time_mean       ls 7.768 vs none   5.098 wilcoxon p=0.000337 p_holm=0.00269
+  same_bush  escape_time_mean     qiea 6.904 vs none   5.098 wilcoxon p=0.028 p_holm=0.196
+  same_bush  escape_time_mean      sqa 6.752 vs none   5.098 wilcoxon p=0.0329 p_holm=0.197
+  same_bush  coordination_score     ga 0.661 vs greedy 0.649 wilcoxon p=0.000192 p_holm=0.000383
+  same_bush  coordination_score     ls 0.656 vs greedy 0.649 wilcoxon p=0.00412 p_holm=0.00412
+  same_bush  coordination_score   none 0.000 vs greedy 0.649 wilcoxon p=2.98e-18 p_holm=2.68e-17
+  same_bush  coordination_score   qiea 0.663 vs greedy 0.649 wilcoxon p=1.11e-06 p_holm=4.43e-06
+  same_bush  coordination_score    sqa 0.669 vs greedy 0.649 wilcoxon p=3.29e-06 p_holm=9.87e-06
+  same_bush  coordination_score     ga 0.661 vs none   0.000 wilcoxon p=3.5e-18 p_holm=2.68e-17
+  same_bush  coordination_score     ls 0.656 vs none   0.000 wilcoxon p=3.01e-18 p_holm=2.68e-17
+  same_bush  coordination_score   qiea 0.663 vs none   0.000 wilcoxon p=3.26e-18 p_holm=2.68e-17
+  same_bush  coordination_score    sqa 0.669 vs none   0.000 wilcoxon p=3.92e-18 p_holm=2.68e-17
+  same_route captured               ga 0.600 vs greedy 0.410 mcnemar p=0.0204 p_holm=0.102 discordant (40, 21)
+  same_route captured               ls 0.770 vs greedy 0.410 mcnemar p=2.1e-07 p_holm=1.68e-06 discordant (43, 7)
+  same_route captured             none 0.770 vs greedy 0.410 mcnemar p=4.41e-08 p_holm=3.97e-07 discordant (41, 5)
+  same_route captured             qiea 0.760 vs greedy 0.410 mcnemar p=2.17e-05 p_holm=0.000152 discordant (51, 16)
+  same_route captured              sqa 0.490 vs greedy 0.410 mcnemar p=0.291 p_holm=0.874 discordant (26, 18)
+  same_route captured               ga 0.600 vs none   0.770 mcnemar p=0.0241 p_holm=0.102 discordant (17, 34)
+  same_route captured               ls 0.770 vs none   0.770 mcnemar p=1 p_holm=1 discordant (18, 18)
+  same_route captured             qiea 0.760 vs none   0.770 mcnemar p=1 p_holm=1 discordant (18, 19)
+  same_route captured              sqa 0.490 vs none   0.770 mcnemar p=0.000175 p_holm=0.00105 discordant (13, 41)
+  same_route escape_time_mean       ga 6.095 vs greedy 8.845 wilcoxon p=0.849 p_holm=0.849
+  same_route escape_time_mean       ls 3.460 vs greedy 8.845 wilcoxon p=0.000607 p_holm=0.00364
+  same_route escape_time_mean     none 3.065 vs greedy 8.845 wilcoxon p=2.25e-10 p_holm=2.03e-09
+  same_route escape_time_mean     qiea 3.653 vs greedy 8.845 wilcoxon p=0.0971 p_holm=0.291
+  same_route escape_time_mean      sqa 7.705 vs greedy 8.845 wilcoxon p=0.278 p_holm=0.557
+  same_route escape_time_mean       ga 6.095 vs none   3.065 wilcoxon p=5.27e-06 p_holm=3.69e-05
+  same_route escape_time_mean       ls 3.460 vs none   3.065 wilcoxon p=0.0265 p_holm=0.106
+  same_route escape_time_mean     qiea 3.653 vs none   3.065 wilcoxon p=0.0166 p_holm=0.0828
+  same_route escape_time_mean      sqa 7.705 vs none   3.065 wilcoxon p=5.3e-08 p_holm=4.24e-07
+  same_route coordination_score     ga 0.704 vs greedy 0.703 wilcoxon p=0.777 p_holm=1
+  same_route coordination_score     ls 0.698 vs greedy 0.703 wilcoxon p=0.487 p_holm=1
+  same_route coordination_score   none 0.000 vs greedy 0.703 wilcoxon p=3.22e-18 p_holm=2.9e-17
+  same_route coordination_score   qiea 0.697 vs greedy 0.703 wilcoxon p=0.4 p_holm=1
+  same_route coordination_score    sqa 0.692 vs greedy 0.703 wilcoxon p=0.0508 p_holm=0.203
+  same_route coordination_score     ga 0.704 vs none   0.000 wilcoxon p=3.35e-18 p_holm=2.9e-17
+  same_route coordination_score     ls 0.698 vs none   0.000 wilcoxon p=3.3e-18 p_holm=2.9e-17
+  same_route coordination_score   qiea 0.697 vs none   0.000 wilcoxon p=3.6e-18 p_holm=2.9e-17
+  same_route coordination_score    sqa 0.692 vs none   0.000 wilcoxon p=3.88e-18 p_holm=2.9e-17
+  stone_lure captured               ga 0.470 vs greedy 0.600 mcnemar p=0.066 p_holm=0.298 discordant (15, 28)
+  stone_lure captured               ls 0.450 vs greedy 0.600 mcnemar p=0.0201 p_holm=0.12 discordant (11, 26)
+  stone_lure captured             none 0.340 vs greedy 0.600 mcnemar p=0.000306 p_holm=0.00275 discordant (12, 38)
+  stone_lure captured             qiea 0.540 vs greedy 0.600 mcnemar p=0.441 p_holm=0.459 discordant (18, 24)
+  stone_lure captured              sqa 0.420 vs greedy 0.600 mcnemar p=0.00792 p_holm=0.0554 discordant (12, 30)
+  stone_lure captured               ga 0.470 vs none   0.340 mcnemar p=0.0596 p_holm=0.298 discordant (27, 14)
+  stone_lure captured               ls 0.450 vs none   0.340 mcnemar p=0.152 p_holm=0.457 discordant (30, 19)
+  stone_lure captured             qiea 0.540 vs none   0.340 mcnemar p=0.00289 p_holm=0.0231 discordant (31, 11)
+  stone_lure captured              sqa 0.420 vs none   0.340 mcnemar p=0.229 p_holm=0.459 discordant (21, 13)
+  stone_lure escape_time_mean       ga 5.259 vs greedy 4.891 wilcoxon p=0.406 p_holm=1
+  stone_lure escape_time_mean       ls 5.596 vs greedy 4.891 wilcoxon p=0.408 p_holm=1
+  stone_lure escape_time_mean     none 6.198 vs greedy 4.891 wilcoxon p=0.0691 p_holm=0.621
+  stone_lure escape_time_mean     qiea 4.617 vs greedy 4.891 wilcoxon p=0.867 p_holm=1
+  stone_lure escape_time_mean      sqa 5.599 vs greedy 4.891 wilcoxon p=0.153 p_holm=1
+  stone_lure escape_time_mean       ga 5.259 vs none   6.198 wilcoxon p=0.842 p_holm=1
+  stone_lure escape_time_mean       ls 5.596 vs none   6.198 wilcoxon p=0.804 p_holm=1
+  stone_lure escape_time_mean     qiea 4.617 vs none   6.198 wilcoxon p=0.526 p_holm=1
+  stone_lure escape_time_mean      sqa 5.599 vs none   6.198 wilcoxon p=0.867 p_holm=1
+  stone_lure coordination_score     ga 0.699 vs greedy 0.730 wilcoxon p=5.5e-12 p_holm=1.65e-11
+  stone_lure coordination_score     ls 0.703 vs greedy 0.730 wilcoxon p=1.23e-11 p_holm=2.47e-11
+  stone_lure coordination_score   none 0.000 vs greedy 0.730 wilcoxon p=3.64e-18 p_holm=2.99e-17
+  stone_lure coordination_score   qiea 0.705 vs greedy 0.730 wilcoxon p=6.51e-11 p_holm=6.51e-11
+  stone_lure coordination_score    sqa 0.693 vs greedy 0.730 wilcoxon p=3.45e-12 p_holm=1.38e-11
+  stone_lure coordination_score     ga 0.699 vs none   0.000 wilcoxon p=3.76e-18 p_holm=2.99e-17
+  stone_lure coordination_score     ls 0.703 vs none   0.000 wilcoxon p=3.71e-18 p_holm=2.99e-17
+  stone_lure coordination_score   qiea 0.705 vs none   0.000 wilcoxon p=3.32e-18 p_holm=2.99e-17
+  stone_lure coordination_score    sqa 0.693 vs none   0.000 wilcoxon p=3.9e-18 p_holm=2.99e-17
+  all        captured               ga 0.537 vs greedy 0.480 mcnemar p=0.175 p_holm=0.741 discordant (78, 61)
+  all        captured               ls 0.567 vs greedy 0.480 mcnemar p=0.0157 p_holm=0.126 discordant (67, 41)
+  all        captured             none 0.540 vs greedy 0.480 mcnemar p=0.123 p_holm=0.741 discordant (70, 52)
+  all        captured             qiea 0.610 vs greedy 0.480 mcnemar p=0.00163 p_holm=0.0147 discordant (93, 54)
+  all        captured              sqa 0.483 vs greedy 0.480 mcnemar p=1 p_holm=1 discordant (58, 57)
+  all        captured               ga 0.537 vs none   0.540 mcnemar p=1 p_holm=1 discordant (64, 65)
+  all        captured               ls 0.567 vs none   0.540 mcnemar p=0.505 p_holm=1 discordant (59, 51)
+  all        captured             qiea 0.610 vs none   0.540 mcnemar p=0.0594 p_holm=0.416 discordant (67, 46)
+  all        captured              sqa 0.483 vs none   0.540 mcnemar p=0.135 p_holm=0.741 discordant (49, 66)
+  all        escape_time_mean       ga 6.028 vs greedy 7.399 wilcoxon p=0.261 p_holm=0.522
+  all        escape_time_mean       ls 5.608 vs greedy 7.399 wilcoxon p=0.0035 p_holm=0.021
+  all        escape_time_mean     none 4.787 vs greedy 7.399 wilcoxon p=3.05e-08 p_holm=2.74e-07
+  all        escape_time_mean     qiea 5.058 vs greedy 7.399 wilcoxon p=0.00858 p_holm=0.0429
+  all        escape_time_mean      sqa 6.685 vs greedy 7.399 wilcoxon p=0.636 p_holm=0.636
+  all        escape_time_mean       ga 6.028 vs none   4.787 wilcoxon p=0.000593 p_holm=0.00415
+  all        escape_time_mean       ls 5.608 vs none   4.787 wilcoxon p=0.0148 p_holm=0.0592
+  all        escape_time_mean     qiea 5.058 vs none   4.787 wilcoxon p=0.136 p_holm=0.407
+  all        escape_time_mean      sqa 6.685 vs none   4.787 wilcoxon p=1.27e-06 p_holm=1.02e-05
+  all        coordination_score     ga 0.688 vs greedy 0.694 wilcoxon p=0.00951 p_holm=0.019
+  all        coordination_score     ls 0.686 vs greedy 0.694 wilcoxon p=0.000438 p_holm=0.00175
+  all        coordination_score   none 0.000 vs greedy 0.694 wilcoxon p=5.64e-51 p_holm=5.04e-50
+  all        coordination_score   qiea 0.689 vs greedy 0.694 wilcoxon p=0.0798 p_holm=0.0798
+  all        coordination_score    sqa 0.684 vs greedy 0.694 wilcoxon p=0.00303 p_holm=0.00909
+  all        coordination_score     ga 0.688 vs none   0.000 wilcoxon p=5.77e-51 p_holm=5.04e-50
+  all        coordination_score     ls 0.686 vs none   0.000 wilcoxon p=5.63e-51 p_holm=5.04e-50
+  all        coordination_score   qiea 0.689 vs none   0.000 wilcoxon p=5.6e-51 p_holm=5.04e-50
+  all        coordination_score    sqa 0.684 vs none   0.000 wilcoxon p=6.05e-51 p_holm=5.04e-50

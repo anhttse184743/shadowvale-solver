@@ -1,0 +1,10 @@
+2026-10-28T04:42:54+07:00  === exp-v2 solver a12809f parts: game full external
+2026-10-28T04:56:06+07:00  === exp-v2 solver a12809f parts: qaoa reference
+2026-10-28T05:37:21+07:00  === done: game full external
+2026-10-28T05:46:23+07:00  === done: qaoa reference
+2026-10-28T05:54:18+07:00  === exp-v2 solver a12809f parts: small
+2026-10-28T06:00:13+07:00 replay 100 seeds x [none,greedy,ls,ga,sqa,qiea], game 525ded19
+2026-10-28T06:06:44+07:00  === done: small
+2026-10-28T09:00:27+07:00 replay done
+2026-10-28T09:00:43+07:00  latency audit (idle machine, one process)
+2026-10-28T09:07:01+07:00  latency audit done

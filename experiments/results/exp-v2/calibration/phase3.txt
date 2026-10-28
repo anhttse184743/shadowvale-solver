@@ -1,0 +1,6 @@
+[Calibrate] stone_lure knob 5.5: capture 0 %, HP left 17.9
+[Calibrate] stone_lure knob 6: capture 30 %, HP left 12.6
+[Calibrate] stone_lure: closest to 50 % capture at knob 6
+[Calibrate] same_bush knob 6.25: capture 40 %, HP left 18.1
+[Calibrate] same_bush: closest to 50 % capture at knob 6.25
+[Calibrate] C:/Users/anhtr/AppData/LocalLow/DefaultCompany/ShadowVale\research\replay-calibration-20261028-054328.json

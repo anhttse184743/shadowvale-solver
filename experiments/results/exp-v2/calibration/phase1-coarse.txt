@@ -1,0 +1,12 @@
+[Calibrate] same_route knob 3: capture 0 %, HP left 43.7
+[Calibrate] same_route knob 5: capture 0 %, HP left 35.3
+[Calibrate] same_route knob 7: capture 10 %, HP left 28.7
+[Calibrate] same_route knob 9: capture 0 %, HP left 18.1
+[Calibrate] same_route knob 11: capture 10 %, HP left 12.6
+[Calibrate] same_route knob 13: capture 80 %, HP left 0.3
+[Calibrate] same_route knob 15: capture 70 %, HP left 1.2
+[Calibrate] same_route: closest to 50 % capture at knob 15
+[Calibrate] same_bush knob 6: capture 30 %, HP left 21.5
+[Calibrate] same_bush knob 7: capture 60 %, HP left 7.0
+[Calibrate] same_bush knob 8: capture 80 %, HP left 3.5
+[Calibrate] same_bush knob 8.5: capture 70 %, HP left 10.6
