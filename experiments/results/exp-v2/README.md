@@ -31,6 +31,7 @@ produced by `scripts/analyze_exp_v2.py` from the files below.
 | `qaoa-study.csv` | QAOA statevector study |
 | `calibration/` | bot calibration on greedy, three phases (coarse, fine, fine) |
 | `replay-a.jsonl`, `replay-b.jsonl` | exploit-bot replay, seeds 1000–1049 and 1050–1099, two Unity projects at the same commit, one sidecar each |
+| `replay-tabu-a.jsonl`, `replay-tabu-b.jsonl` | the same replay for Tabu, run afterwards (same build, seeds and harness); the analysis tests all seven variants as one family |
 | `latency-audit-game.csv`, `latency-audit-full.csv`, `full-audit.yaml` | latency re-measured one process at a time on the idle machine (415 game and 90 full-suite instances; the main parts ran as concurrent processes) |
 | `analysis.txt`, `figures/` | everything quoted in the papers |
 
@@ -39,6 +40,7 @@ produced by `scripts/analyze_exp_v2.py` from the files below.
 ```bash
 bash scripts/run_exp_v2.sh game full reference small external qaoa
 bash scripts/run_replay_v2.sh <game project> <copy of it at the same commit> 100 none,greedy,ls,ga,sqa,qiea
+bash scripts/run_replay_v2.sh <game project> <copy of it at the same commit> 100 tabu tabu-   # added afterwards
 .venv/Scripts/python.exe scripts/analyze_exp_v2.py --replay experiments/results/exp-v2/replay-*.jsonl
 ```
 

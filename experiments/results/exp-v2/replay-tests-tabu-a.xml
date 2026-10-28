@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-28 10:14:04Z" end-time="2026-10-28 10:44:23Z" duration="1818.7989785">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="873" result="Passed" start-time="2026-10-28 10:14:04Z" end-time="2026-10-28 10:44:23Z" duration="1818.798979" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1831" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/anhtr/Desktop/Project Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="650" result="Passed" start-time="2026-10-28 10:14:04Z" end-time="2026-10-28 10:44:23Z" duration="1818.635773" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="286424" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1832" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="650" result="Passed" start-time="2026-10-28 10:14:04Z" end-time="2026-10-28 10:44:23Z" duration="1818.614393" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1833" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="650" result="Passed" start-time="2026-10-28 10:14:04Z" end-time="2026-10-28 10:44:23Z" duration="1818.596755" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1739" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="650" result="Passed" start-time="2026-10-28 10:14:04Z" end-time="2026-10-28 10:44:23Z" duration="1818.578245" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1835" name="Replay" fullname="ShadowVale.Map01.Tests.Replay" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-28 10:14:04Z" end-time="2026-10-28 10:44:23Z" duration="1818.527207" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1827" name="ReplayHarnessTests" fullname="ShadowVale.Map01.Tests.Replay.ReplayHarnessTests" classname="ShadowVale.Map01.Tests.Replay.ReplayHarnessTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-28 10:14:04Z" end-time="2026-10-28 10:44:23Z" duration="1818.511748" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1829" name="ExploitBotMatrix" fullname="ShadowVale.Map01.Tests.Replay.ReplayHarnessTests.ExploitBotMatrix" methodname="ExploitBotMatrix" classname="ShadowVale.Map01.Tests.Replay.ReplayHarnessTests" runstate="Explicit" seed="1234649940" result="Passed" start-time="2026-10-28 10:13:36Z" end-time="2026-10-28 10:44:23Z" duration="1846.510111" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="_SKIPREASON" value="The experiment: minutes to hours. Run it on purpose." />
+                    <property name="Category" value="Replay" />
+                    <property name="Timeout" value="2147483647" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Replay] 50 runs × 3 bots × 1 variants → C:/Users/anhtr/Desktop/Project Capstone/shadowvale-solver/experiments/results/exp-v2/replay-tabu-a.jsonl
+[Replay] 1/150 same_route tabu seed 1000: captured in 15.8 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 2/150 same_bush tabu seed 1000: escaped in 29.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.65
+[Replay] 3/150 stone_lure tabu seed 1000: captured in 23.5 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 4/150 same_route tabu seed 1001: captured in 19.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 5/150 same_bush tabu seed 1001: captured in 17.7 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 6/150 stone_lure tabu seed 1001: captured in 25.5 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 7/150 same_route tabu seed 1002: captured in 17.0 s, 1 plans, 0 discarded, 0 fallbacks, coordination 0.67
+[Replay] 8/150 same_bush tabu seed 1002: escaped in 33.2 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.59
+[Replay] 9/150 stone_lure tabu seed 1002: escaped in 35.9 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 10/150 same_route tabu seed 1003: escaped in 25.8 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 11/150 same_bush tabu seed 1003: escaped in 29.2 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 12/150 stone_lure tabu seed 1003: captured in 24.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 13/150 same_route tabu seed 1004: captured in 20.1 s, 2 plans, 1 discarded, 0 fallbacks, coordination 0.68
+[Replay] 14/150 same_bush tabu seed 1004: escaped in 30.6 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.64
+[Replay] 15/150 stone_lure tabu seed 1004: escaped in 33.4 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.75
+[Replay] 16/150 same_route tabu seed 1005: captured in 20.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 17/150 same_bush tabu seed 1005: captured in 18.9 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 18/150 stone_lure tabu seed 1005: captured in 26.3 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 19/150 same_route tabu seed 1006: escaped in 30.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.78
+[Replay] 20/150 same_bush tabu seed 1006: captured in 19.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 21/150 stone_lure tabu seed 1006: escaped in 36.9 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 22/150 same_route tabu seed 1007: captured in 14.0 s, 1 plans, 0 discarded, 0 fallbacks, coordination 0.60
+[Replay] 23/150 same_bush tabu seed 1007: escaped in 29.9 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.63
+[Replay] 24/150 stone_lure tabu seed 1007: captured in 23.9 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 25/150 same_route tabu seed 1008: escaped in 28.4 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 26/150 same_bush tabu seed 1008: captured in 17.1 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 27/150 stone_lure tabu seed 1008: escaped in 34.5 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 28/150 same_route tabu seed 1009: captured in 19.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.74
+[Replay] 29/150 same_bush tabu seed 1009: captured in 19.3 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.67
+[Replay] 30/150 stone_lure tabu seed 1009: escaped in 36.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 31/150 same_route tabu seed 1010: captured in 17.1 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 32/150 same_bush tabu seed 1010: captured in 15.3 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 33/150 stone_lure tabu seed 1010: escaped in 32.0 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.73
+[Replay] 34/150 same_route tabu seed 1011: escaped in 27.9 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 35/150 same_bush tabu seed 1011: escaped in 31.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 36/150 stone_lure tabu seed 1011: captured in 24.8 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 37/150 same_route tabu seed 1012: escaped in 29.3 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 38/150 same_bush tabu seed 1012: captured in 18.8 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 39/150 stone_lure tabu seed 1012: escaped in 35.5 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.73
+[Replay] 40/150 same_route tabu seed 1013: escaped in 25.4 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 41/150 same_bush tabu seed 1013: escaped in 28.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 42/150 stone_lure tabu seed 1013: captured in 22.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.64
+[Replay] 43/150 same_route tabu seed 1014: escaped in 27.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 44/150 same_bush tabu seed 1014: escaped in 30.6 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.65
+[Replay] 45/150 stone_lure tabu seed 1014: captured in 25.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 46/150 same_route tabu seed 1015: captured in 21.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 47/150 same_bush tabu seed 1015: captured in 18.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 48/150 stone_lure tabu seed 1015: captured in 26.7 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 49/150 same_route tabu seed 1016: captured in 23.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.74
+[Replay] 50/150 same_bush tabu seed 1016: captured in 20.1 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 51/150 stone_lure tabu seed 1016: escaped in 36.6 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 52/150 same_route tabu seed 1017: captured in 18.1 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 53/150 same_bush tabu seed 1017: escaped in 29.6 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.59
+[Replay] 54/150 stone_lure tabu seed 1017: captured in 23.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 55/150 same_route tabu seed 1018: captured in 18.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 56/150 same_bush tabu seed 1018: escaped in 31.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.64
+[Replay] 57/150 stone_lure tabu seed 1018: captured in 26.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 58/150 same_route tabu seed 1019: captured in 19.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.74
+[Replay] 59/150 same_bush tabu seed 1019: captured in 18.3 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 60/150 stone_lure tabu seed 1019: captured in 28.1 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 61/150 same_route tabu seed 1020: escaped in 25.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 62/150 same_bush tabu seed 1020: escaped in 29.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.65
+[Replay] 63/150 stone_lure tabu seed 1020: captured in 22.9 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 64/150 same_route tabu seed 1021: captured in 20.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 65/150 same_bush tabu seed 1021: escaped in 30.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.65
+[Replay] 66/150 stone_lure tabu seed 1021: captured in 24.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 67/150 same_route tabu seed 1022: captured in 22.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 68/150 same_bush tabu seed 1022: escaped in 32.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.63
+[Replay] 69/150 stone_lure tabu seed 1022: captured in 26.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 70/150 same_route tabu seed 1023: captured in 22.1 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.75
+[Replay] 71/150 same_bush tabu seed 1023: captured in 18.9 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 72/150 stone_lure tabu seed 1023: captured in 29.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 73/150 same_route tabu seed 1024: captured in 16.1 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 74/150 same_bush tabu seed 1024: escaped in 30.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 75/150 stone_lure tabu seed 1024: captured in 24.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 76/150 same_route tabu seed 1025: captured in 19.1 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 77/150 same_bush tabu seed 1025: captured in 17.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 78/150 stone_lure tabu seed 1025: escaped in 34.4 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 79/150 same_route tabu seed 1026: captured in 19.5 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 80/150 same_bush tabu seed 1026: captured in 19.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 81/150 stone_lure tabu seed 1026: escaped in 36.1 s, 4 plans, 0 discarded, 0 fallbacks, coordination 0.67
+[Replay] 82/150 same_route tabu seed 1027: captured in 15.7 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 83/150 same_bush tabu seed 1027: escaped in 29.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.59
+[Replay] 84/150 stone_lure tabu seed 1027: captured in 23.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 85/150 same_route tabu seed 1028: captured in 19.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 86/150 same_bush tabu seed 1028: escaped in 30.9 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 87/150 stone_lure tabu seed 1028: captured in 25.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 88/150 same_route tabu seed 1029: escaped in 29.3 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 89/150 same_bush tabu seed 1029: captured in 18.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 90/150 stone_lure tabu seed 1029: escaped in 35.5 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 91/150 same_route tabu seed 1030: escaped in 25.3 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 92/150 same_bush tabu seed 1030: escaped in 28.3 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.65
+[Replay] 93/150 stone_lure tabu seed 1030: captured in 22.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 94/150 same_route tabu seed 1031: captured in 16.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 95/150 same_bush tabu seed 1031: escaped in 30.8 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.65
+[Replay] 96/150 stone_lure tabu seed 1031: captured in 24.8 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 97/150 same_route tabu seed 1032: captured in 17.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 98/150 same_bush tabu seed 1032: captured in 17.8 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 99/150 stone_lure tabu seed 1032: escaped in 34.7 s, 4 plans, 0 discarded, 0 fallbacks, coordination 0.67
+[Replay] 100/150 same_route tabu seed 1033: captured in 22.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.74
+[Replay] 101/150 same_bush tabu seed 1033: captured in 19.7 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 102/150 stone_lure tabu seed 1033: escaped in 36.5 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 103/150 same_route tabu seed 1034: captured in 13.8 s, 1 plans, 0 discarded, 0 fallbacks, coordination 0.60
+[Replay] 104/150 same_bush tabu seed 1034: escaped in 29.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 105/150 stone_lure tabu seed 1034: escaped in 32.3 s, 4 plans, 1 discarded, 0 fallbacks, coordination 0.65
+[Replay] 106/150 same_route tabu seed 1035: escaped in 28.0 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.70
+[Replay] 107/150 same_bush tabu seed 1035: escaped in 31.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.64
+[Replay] 108/150 stone_lure tabu seed 1035: escaped in 34.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 109/150 same_route tabu seed 1036: escaped in 29.5 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 110/150 same_bush tabu seed 1036: captured in 18.4 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 111/150 stone_lure tabu seed 1036: escaped in 35.7 s, 4 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 112/150 same_route tabu seed 1037: escaped in 25.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 113/150 same_bush tabu seed 1037: escaped in 29.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.65
+[Replay] 114/150 stone_lure tabu seed 1037: escaped in 31.6 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.73
+[Replay] 115/150 same_route tabu seed 1038: captured in 16.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 116/150 same_bush tabu seed 1038: escaped in 30.6 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.58
+[Replay] 117/150 stone_lure tabu seed 1038: captured in 24.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 118/150 same_route tabu seed 1039: captured in 15.9 s, 1 plans, 0 discarded, 0 fallbacks, coordination 0.60
+[Replay] 119/150 same_bush tabu seed 1039: escaped in 32.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.63
+[Replay] 120/150 stone_lure tabu seed 1039: escaped in 35.2 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 121/150 same_route tabu seed 1040: captured in 23.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.74
+[Replay] 122/150 same_bush tabu seed 1040: captured in 19.9 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 123/150 stone_lure tabu seed 1040: captured in 29.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 124/150 same_route tabu seed 1041: captured in 15.7 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 125/150 same_bush tabu seed 1041: escaped in 30.1 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 126/150 stone_lure tabu seed 1041: escaped in 32.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 127/150 same_route tabu seed 1042: captured in 15.5 s, 1 plans, 0 discarded, 0 fallbacks, coordination 0.60
+[Replay] 128/150 same_bush tabu seed 1042: escaped in 31.6 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.58
+[Replay] 129/150 stone_lure tabu seed 1042: escaped in 34.3 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.75
+[Replay] 130/150 same_route tabu seed 1043: captured in 22.3 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 131/150 same_bush tabu seed 1043: captured in 19.4 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 132/150 stone_lure tabu seed 1043: escaped in 36.0 s, 4 plans, 0 discarded, 0 fallbacks, coordination 0.67
+[Replay] 133/150 same_route tabu seed 1044: captured in 17.9 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.75
+[Replay] 134/150 same_bush tabu seed 1044: escaped in 29.2 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.64
+[Replay] 135/150 stone_lure tabu seed 1044: escaped in 31.8 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.73
+[Replay] 136/150 same_route tabu seed 1045: captured in 16.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.71
+[Replay] 137/150 same_bush tabu seed 1045: captured in 17.0 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 138/150 stone_lure tabu seed 1045: captured in 24.6 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 139/150 same_route tabu seed 1046: escaped in 29.2 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 140/150 same_bush tabu seed 1046: captured in 17.8 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 141/150 stone_lure tabu seed 1046: escaped in 35.3 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.69
+[Replay] 142/150 same_route tabu seed 1047: escaped in 25.3 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.74
+[Replay] 143/150 same_bush tabu seed 1047: escaped in 28.7 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 144/150 stone_lure tabu seed 1047: escaped in 31.1 s, 4 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 145/150 same_route tabu seed 1048: captured in 16.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.72
+[Replay] 146/150 same_bush tabu seed 1048: captured in 16.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.67
+[Replay] 147/150 stone_lure tabu seed 1048: escaped in 32.9 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.75
+[Replay] 148/150 same_route tabu seed 1049: captured in 19.4 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+[Replay] 149/150 same_bush tabu seed 1049: escaped in 32.2 s, 3 plans, 0 discarded, 0 fallbacks, coordination 0.66
+[Replay] 150/150 stone_lure tabu seed 1049: captured in 26.2 s, 2 plans, 0 discarded, 0 fallbacks, coordination 0.68
+Saving results to: C:/Users/anhtr/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

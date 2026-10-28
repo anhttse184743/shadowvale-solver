@@ -279,7 +279,7 @@ def plot_replay(rows) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    variants = [v for v in ["none", "greedy", "ls", "ga", "sqa", "qiea"] if any(r["variant"] == v for r in rows)]
+    variants = [v for v in ["none", "greedy", "ls", "tabu", "ga", "sqa", "qiea"] if any(r["variant"] == v for r in rows)]
     bots = sorted({r["bot"] for r in rows})
     fig, ax = plt.subplots(figsize=(3.4, 2.2))
     w = .8 / len(variants)
@@ -361,7 +361,7 @@ def latex_qaoa_table() -> None:
 def latex_replay_table(rows) -> None:
     """Capture rate per bot and variant with Wilson 95 % intervals; McNemar against Greedy and none."""
     PAPER.mkdir(parents=True, exist_ok=True)
-    variants = [v for v in ["none", "greedy", "ls", "ga", "sqa", "qiea"] if any(r["variant"] == v for r in rows)]
+    variants = [v for v in ["none", "greedy", "ls", "tabu", "ga", "sqa", "qiea"] if any(r["variant"] == v for r in rows)]
     bots = sorted({r["bot"] for r in rows})
     out = [r"\begin{tabular}{l" + "r" * len(variants) + "}", r"\toprule",
            "Bot & " + " & ".join(LABEL[v] for v in variants) + r" \\", r"\midrule"]

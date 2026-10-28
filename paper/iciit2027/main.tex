@@ -40,7 +40,7 @@ choosing a node set plus a Hungarian assignment, which proves every game-size op
 search after Greedy cuts its gap from 2.8\,\% to 0.27\,\%. The quantum-inspired QIEA is no more
 accurate than a genetic algorithm or than PBIL, its Q-bit-free ablation; bit-flip annealers (SA,
 SQA) trail Greedy; and simulated QAOA, read from the statevector, does not find the optimum more
-often than uniform sampling of valid assignments. In 1{,}800 paired replays of scripted exploits on the final build, the solver changed
+often than uniform sampling of valid assignments. In 2{,}100 paired replays of scripted exploits on the final build, the solver changed
 capture rates by up to 36 points against one exploit, but in opposite directions across exploits.
 \end{abstract}
 
@@ -291,7 +291,7 @@ optimum stays at 0.13--1.14 times the uniform one and its 512-shot hit rate neve
 paired seeds per cell, with Wilson 95\,\% intervals. \emph{none}: no plans, FSM only.}
 \label{tab:replay}
 \setlength{\tabcolsep}{2.5pt}
-\input{tables/replay.tex}
+\resizebox{\columnwidth}{!}{\input{tables/replay.tex}}
 \end{table}
 
 Table~\ref{tab:replay} gives the capture rates on the final build; no plan fell back to Greedy.
@@ -300,8 +300,9 @@ Greedy+LS and QIEA capture the bot in 77 and 76\,\% of the seeds against 41\,\% 
 McNemar, $p_\text{Holm}<0.001$), as often as guards without plans (77\,\%). Against
 \emph{stone\_lure}, Greedy captures most (60\,\%) and \emph{none} least (34\,\%,
 $p_\text{Holm}=0.003$); against \emph{same\_bush} no variant differs. Pooled over the bots, QIEA
-captures more than Greedy (61 vs.\ 48\,\%, $p_\text{Holm}=0.015$) but not significantly more than
-no coordination (54\,\%). The coverage score of the applied plans hardly differs between solvers
+captures more than Greedy (61 vs.\ 48\,\%, $p_\text{Holm}=0.018$) but not significantly more than
+no coordination (54\,\%). Tabu, the most accurate solver, captures 53\,\% pooled, no different from
+Greedy or \emph{none}, and below QIEA against every bot (not significant after correction, $p_\text{Holm}=0.13$). The coverage score of the applied plans hardly differs between solvers
 (0.65--0.73). Greedy's squads keep an escaping player engaged longer than squads without plans
 (7.4 vs.\ 4.8\,s, $p_\text{Holm}<10^{-6}$); for Greedy+LS and QIEA the difference is not significant.
 
