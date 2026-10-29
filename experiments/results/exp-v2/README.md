@@ -33,6 +33,7 @@ produced by `scripts/analyze_exp_v2.py` from the files below.
 | `replay-a.jsonl`, `replay-b.jsonl` | exploit-bot replay, seeds 1000–1049 and 1050–1099, two Unity projects at the same commit, one sidecar each |
 | `replay-tabu-a.jsonl`, `replay-tabu-b.jsonl` | the same replay for Tabu, run afterwards (same build, seeds and harness); the analysis tests all seven variants as one family |
 | `latency-audit-game.csv`, `latency-audit-full.csv`, `full-audit.yaml` | latency re-measured one process at a time on the idle machine (415 game and 90 full-suite instances; the main parts ran as concurrent processes) |
+| `exact-set-latency.csv`, `exact-set-latency.txt` | `exact_set` on the 3,447 evaluated game instances, one process on the idle machine (min of 3 solves), every optimum checked against the benchmark's (`scripts/exact_set_latency.py`, added after the review of 29/10) |
 | `analysis.txt`, `figures/` | everything quoted in the papers |
 
 ## Reproduce
