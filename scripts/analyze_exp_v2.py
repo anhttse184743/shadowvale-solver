@@ -347,8 +347,7 @@ def latex_qaoa_table() -> None:
         if int(r["layers"]) == p_max:
             groups[(int(r["n_vars"]), int(r["n_agents"]), int(r["n_nodes"]), r["ansatz"])].append(r)
     out = [r"\begin{tabular}{rrlrrrrr}", r"\toprule",
-           r"$n$ & $A{\times}|V|$ & mixer & $P_\text{valid}$ & $P_\text{opt}$ & $P_\text{opt}$/uniform & "
-           r"hit$_{512}$ & uniform hit$_{512}$ \\", r"\midrule"]
+           r"$n$ & $A{\times}|V|$ & mixer & $P_\text{valid}$ & $P_\text{opt}$ & ratio & hit$_{512}$ & unif. \\", r"\midrule"]
     for (n, a, v, an), rs in sorted(groups.items(), key=lambda kv: (kv[0][0], kv[0][1], kv[0][3])):
         m = lambda k: float(np.mean([float(r[k]) for r in rs]))  # noqa: E731
         ratio = float(np.median([float(r["p_opt"]) / float(r["uniform_feasible_p_opt"]) for r in rs]))

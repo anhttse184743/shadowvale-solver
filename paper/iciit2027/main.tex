@@ -9,9 +9,10 @@
 \settopmatter{printacmref=false}
 \setcopyright{none}
 \renewcommand\footnotetextcopyrightpermission[1]{}
-\acmConference[ICIIT 2027]{2027 12th International Conference on Intelligent Information Technology}{2027}{}
+\acmConference[ICIIT 2027]{2027 12th International Conference on Intelligent Information Technology}{March 4--7, 2027}{Ho Chi Minh City, Vietnam}
 
 \begin{document}
+\setlength{\emergencystretch}{1.5em}
 
 \title{Do Quantum-Inspired Solvers Help Real-Time NPC Squad Coordination?\texorpdfstring{\\}{ }
 A Reproducible QUBO Benchmark in a Game Testbed}
@@ -162,8 +163,10 @@ elitism); \emph{SA} is dwave-neal~\cite{DWaveNeal,Kirkpatrick1983} on raw bits.
 \textbf{Quantum-inspired and simulated quantum.} \emph{QIEA}~\cite{HanKim2002} samples bits from
 rotating Q-bits; \emph{PBIL} (new) is QIEA with the rotation replaced by a PBIL probability
 vector~\cite{Baluja1994}, isolating the Q-bit. \emph{SQA} is path-integral Monte Carlo with 16
-Trotter replicas~\cite{Martonak2002}; \emph{QAOA}~\cite{Farhi2014} ($p=2$, 512 shots) is an exact
-numpy statevector simulation up to 18 qubits. GA, QIEA, PBIL, Tabu and SA-1h start from Greedy's
+Trotter replicas~\cite{Martonak2002}; \emph{QAOA}~\cite{Farhi2014} as a solver ($p=2$, 512 shots) is an exact
+numpy statevector simulation up to 18 qubits; a separate study (Section~\ref{sec:qaoa}) reads
+$p=1$--3 circuits directly from the statevector, with angles from a grid plus Nelder--Mead and no
+time limit, for the standard and a ring-XY mixer. GA, QIEA, PBIL, Tabu and SA-1h start from Greedy's
 assignment; SA, SQA and QAOA from random states.
 \textbf{Exact references.} Enumeration, \texttt{exact\_set} (Eq.~\ref{eq:set}) up to
 $5\times10^6$ node sets, otherwise branch and bound.
@@ -259,15 +262,15 @@ QIEA, and with 1\,s it reaches 1.5\,\% (GA 9.5\,\%, QIEA 14.8\,\%). GA is thus f
 baseline, and our tabu search is in the range expected of robust tabu search on these
 sizes~\cite{Taillard1991}.
 
-\subsection{QAOA against uniform sampling}
+\subsection{QAOA against uniform sampling}\label{sec:qaoa}
 
 \begin{table}[t]
 \centering\small
 \caption{QAOA read from the statevector ($p=3$, angles optimized without a time limit),
 means over instances. $P_\text{valid}$, $P_\text{opt}$: probability of measuring a valid assignment,
-an optimal one. $P_\text{opt}$/uniform: median ratio to sampling valid assignments uniformly.
-hit$_{512}$: probability that 512 shots contain the optimum, for QAOA and for 512 uniformly drawn
-valid assignments. X: standard mixer; XY: ring-XY mixer in the one-hot sector.}
+an optimal one. Ratio: median of $P_\text{opt}$ over that of sampling valid assignments uniformly.
+hit$_{512}$, unif.: probability that 512 shots contain the optimum, for QAOA and for 512 uniformly
+drawn valid assignments. X: standard mixer; XY: ring-XY mixer in the one-hot sector.}
 \label{tab:qaoa}
 \setlength{\tabcolsep}{3pt}
 \input{tables/qaoa.tex}
