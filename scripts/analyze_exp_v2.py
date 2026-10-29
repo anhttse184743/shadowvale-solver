@@ -184,7 +184,8 @@ def plot_full(table, lat) -> None:
              "sa": ("tab:red", "v"), "sa1h": ("tab:pink", "<"), "pbil": ("tab:olive", ">"),
              "sqa": ("tab:purple", "x"), "qiea": ("tab:orange", "*")}
     for kind in ("quality", "latency"):
-        fig, axes = plt.subplots(1, len(As), figsize=(7.0, 2.4), sharey=True)
+        # Drawn at the width of one paper column, so the fonts print at their size (review 29/10).
+        fig, axes = plt.subplots(1, len(As), figsize=(3.4, 2.6), sharey=True)
         for ax, A in zip(axes, As):
             for s in SOLVERS:
                 xs, ys, lo, hi = [], [], [], []
@@ -200,14 +201,17 @@ def plot_full(table, lat) -> None:
                     c, mk = style[s]
                     ax.errorbar(xs, ys, yerr=[lo, hi], color=c, marker=mk, ms=3, lw=1, capsize=1.5, label=LABEL[s])
             ax.set_yscale("log")
-            ax.set_title(f"A = {A} agents", fontsize=8)
-            ax.set_xlabel("nodes N", fontsize=8)
-            ax.tick_params(labelsize=7)
+            ax.set_title(f"A = {A}", fontsize=7)
+            ax.set_xlabel("nodes N", fontsize=7)
+            ax.set_xticks([20, 60, 100])
+            ax.tick_params(labelsize=6.5)
             if kind == "latency":
                 ax.axhline(120, ls="--", c="k", lw=.8)
-        axes[0].set_ylabel("mean gap (%)" if kind == "quality" else "latency p50 (ms)", fontsize=8)
-        axes[-1].legend(fontsize=6, ncol=2, loc="best")
-        fig.tight_layout()
+        axes[0].set_ylabel("mean gap (%)" if kind == "quality" else "latency p50 (ms)", fontsize=7)
+        handles, labels = axes[0].get_legend_handles_labels()
+        fig.legend(handles, labels, fontsize=6.5, ncol=5, loc="lower center", frameon=False,
+                   handlelength=1.5, columnspacing=.8)
+        fig.tight_layout(rect=(0, .17, 1, 1))
         fig.savefig(figs / f"full_{kind}.pdf")
         plt.close(fig)
 
@@ -357,8 +361,10 @@ def latex_qaoa_table() -> None:
     (PAPER / "qaoa.tex").write_text("\n".join(out) + "\n", encoding="utf-8")
 
 
-def latex_replay_table(rows) -> None:
-    """Capture rate per bot and variant with Wilson 95 % intervals; McNemar against Greedy and none."""
+def latex_replay_table(rows, intervals: bool = False) -> None:
+    """Capture rate per bot and variant; McNemar against Greedy and none. Without ``intervals`` the
+    Wilson 95 % intervals stay out of the cells (the caption gives their width) so that the table fits
+    one column at full size (review 29/10)."""
     PAPER.mkdir(parents=True, exist_ok=True)
     variants = [v for v in ["none", "greedy", "ls", "tabu", "ga", "sqa", "qiea"] if any(r["variant"] == v for r in rows)]
     bots = sorted({r["bot"] for r in rows})
@@ -373,7 +379,8 @@ def latex_replay_table(rows) -> None:
                 continue
             k = int(sum(r["captured"] for r in rs))
             lo, hi = wilson(k, len(rs))
-            cells.append(f"{100 * k / len(rs):.0f} {{\\scriptsize[{100 * lo:.0f},{100 * hi:.0f}]}}")
+            cells.append(f"{100 * k / len(rs):.0f} {{\\scriptsize[{100 * lo:.0f},{100 * hi:.0f}]}}" if intervals
+                         else f"{100 * k / len(rs):.0f}")
         name = "all bots" if b is None else b.replace("_", r"\_")
         if b is None:
             out.append(r"\midrule")

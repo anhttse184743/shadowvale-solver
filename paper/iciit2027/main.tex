@@ -36,8 +36,8 @@ interact. We formulate this assignment as a QUBO in our stealth game ShadowVale 
 quantum and quantum-inspired solvers help within the 120\,ms a re-plan may take. On 3{,}447 QUBOs
 recorded in play, 1{,}350 generated instances of up to 1{,}200 variables, Moving AI maps and QAPLIB,
 we compare ten solvers against exact references. Only travel cost depends on the agent, so the exact problem reduces to
-choosing a node set plus a Hungarian assignment, which proves every game-size optimum in about
-0.1\,s. Classical tabu search is optimal in 99.9\,\% of game runs, and one millisecond of local
+choosing a node set plus a Hungarian assignment, which proves the optimum of every recorded
+re-plan, within the 120\,ms budget for 94\,\% of them, every one with up to six agents included. Classical tabu search is optimal in 99.9\,\% of game runs, and one millisecond of local
 search after Greedy cuts its gap from 2.8\,\% to 0.27\,\%. The quantum-inspired QIEA is no more
 accurate than a genetic algorithm or than PBIL, its Q-bit-free ablation; bit-flip annealers (SA,
 SQA) trail Greedy; and simulated QAOA, read from the statevector, does not find the optimum more
@@ -126,8 +126,8 @@ so $E=-F$ on every feasible $x$, and gaps below are computed on $F$.
 \textbf{Penalty weight.} With $L=\max_r(w_c\mathrm{cov}_r+w_q q_r)$, $D=w_d\max d$,
 $P^+=w_f\max\mathrm{flk}$, $P^-=w_r\max\mathrm{ovl}$ we set
 $\lambda = 1 + L + 2(A-1)P^+ + D + (A-1)P^-$. Any infeasible $x$ is repaired by steps that each lower
-$E$: (i)~an agent with $k\ge2$ nodes drops one (penalty $-\lambda$ or more, reward at most
-$L+2(A-1)P^+$); (ii)~of two agents sharing a node, one moves to a free node (penalty $-\lambda$, $F$
+$E$: (i)~the agent with the most nodes, $k\ge2$, drops one (penalty $-\lambda(2k-3)$; reward at most
+$L+(A-1)kP^+$, as no agent holds more than $k$, which $\lambda$ covers for every $k\ge2$); (ii)~of two agents sharing a node, one moves to a free node (penalty $-\lambda$, $F$
 changes by at most $L+D+(A-1)(P^+ + P^-)$); (iii)~an agent without a node takes a free one (loss at
 most $D+(A-1)P^-$). So every global minimum is feasible; single-flip local minima need not be, as
 (ii) is a two-bit move. Tests check the dominance exhaustively on small instances.
@@ -142,8 +142,10 @@ Hungarian method~\cite{Kuhn1955}. There are $\binom{|V|}{A}=134{,}596$ node sets
 $|V|=24$, against $|V|!/(|V|-A)! \approx 9.7\times10^7$ assignments. Our exact solver
 \texttt{exact\_set} reads this structure from $Q$ alone (it checks that all agent pairs share one
 symmetric block), ranks sets by $G(S)$ plus a lower bound on the assignment cost, and solves
-assignments in that order until the bound passes the incumbent; it proves the optimum of a 6-agent,
-24-node instance in about 0.1\,s, against 1--5\,s for our earlier branch and bound. The structure
+assignments in that order until the bound passes the incumbent. On the 3{,}447 recorded instances
+(one thread) it takes at most 99\,ms with up to six agents (median 54\,ms at six), a median of
+127 and 231\,ms with seven and eight (at most 0.72\,s), against 1--5\,s for our earlier branch
+and bound: an exact in-game solve would fit the budget in 94\,\% of re-plans. The structure
 also bears on QAOA: the one-hot encoding needs $A|V|$ qubits although the hard part of the problem
 is the choice of $S$ over $|V|$ nodes (Section~\ref{sec:disc}).
 
@@ -180,8 +182,10 @@ marginal energy, then the cheapest free node), at about Greedy's cost, outside t
 3{,}447 are evaluated. (ii)~\emph{Full}: generated instances with $|V|\in\{20,\dots,100\}$,
 $A\in\{4,8,12\}$, chokepoint density $\{0,0.3,0.6\}$, 30 seeds per cell (1{,}350 instances, up to
 1{,}200 variables). (iii)~\emph{Small}: $|V|\in\{6,8,10\}$, $A\in\{2,3\}$ (180 instances, 12--30
-variables), where QAOA can run. (iv)~\emph{Moving AI}: 342 coordination instances built on
-game maps~\cite{Sturtevant2012}. (v)~\emph{QAPLIB}: the 77 instances with $n\le30$
+variables), where QAOA can run. (iv)~\emph{Moving AI}: 342 instances on 38 maps of Baldur's Gate~II, StarCraft, Warcraft~III and
+Dragon Age~\cite{Sturtevant2012}, built by the game's own steps (graph sampled every 4 cells,
+local subgraph of at most 24 nodes, escape nodes on its boundary, line of sight within 14 cells),
+$A\in\{4,6,8\}$, 3 seeds per map. (v)~\emph{QAPLIB}: the 77 instances with $n\le30$
 facilities~\cite{Burkard1997}, scored against the published optimum (76; one has optimum 0).
 
 \textbf{Protocol.} All solvers get the same 120\,ms wall-clock budget on one CPU thread (Intel
@@ -203,8 +207,9 @@ checked against an idle-machine re-run (Section~\ref{sec:disc}).
 \emph{same\_route} crosses on a fixed lane and flees after a reaction time, \emph{same\_bush} hides in
 the same bush, \emph{stone\_lure} throws a stone to one side and sneaks past on the other. Each
 bot's time knob was calibrated on Greedy (seeds 500+) to about 50\,\% capture on the final build
-before any comparison. Every variant plays the same 100 seeds per bot (1000+) at a fixed 30\,fps
-step, applying each plan after its real solve latency (lockstep); \emph{none} keeps radio alerts
+before any comparison. Seven variants are replayed (PBIL, SA and SA-1h are left out to bound the
+run time; their offline gaps lie between those of replayed solvers). Every variant plays the same
+100 seeds per bot (1000+) at a fixed 30\,fps step, applying each plan after its real solve latency (lockstep); \emph{none} keeps radio alerts
 but no plans. Captures are compared on paired seeds with the exact McNemar test, escape time and
 coverage (share of escape nodes seen from the plan) with Wilcoxon, all Holm-corrected against
 Greedy and against \emph{none}.
@@ -248,7 +253,9 @@ run for 720, never beaten at 120\,ms), tabu search is again best (0.78\,\%, at t
 88\,\% of runs), then Greedy+LS (1.32\,\%), PBIL (2.14\,\%), QIEA (2.19\,\%, $p=0.27$ against PBIL),
 GA (2.70\,\%) and SA-1h (2.75\,\%); Greedy stays near 8\,\%. With 4 agents tabu search is exact up to
 100 nodes; with 12 agents and 100 nodes every method ends near Greedy (9.0--9.6\,\%), as our Python
-iterations no longer fit many times into 120\,ms. SA and SQA degrade to 36--57\,\%, and on an idle
+iterations no longer fit many times into 120\,ms. Where the reference is a 2\,s run of Tabu or GA,
+the gaps partly measure convergence towards those two solvers. At 100 nodes SA and SQA reach
+36--57\,\% (29.5 and 32.3\,\% over the suite), and on an idle
 machine bit-flip SA exceeds the budget in 34\,\% of its runs (dwave-neal's batches cannot be
 interrupted).
 
@@ -291,10 +298,11 @@ optimum stays at 0.13--1.14 times the uniform one and its 512-shot hit rate neve
 \begin{table}[t]
 \centering\small
 \caption{Capture rate (\%) per exploit bot and coordination variant on the final build, 100
-paired seeds per cell, with Wilson 95\,\% intervals. \emph{none}: no plans, FSM only.}
+paired seeds per cell (Wilson 95\,\% intervals about $\pm10$ points per bot, $\pm6$ pooled).
+\emph{none}: no plans, FSM only.}
 \label{tab:replay}
-\setlength{\tabcolsep}{2.5pt}
-\resizebox{\columnwidth}{!}{\input{tables/replay.tex}}
+\setlength{\tabcolsep}{3pt}
+\input{tables/replay.tex}
 \end{table}
 
 Table~\ref{tab:replay} gives the capture rates on the final build; no plan fell back to Greedy.
@@ -343,15 +351,17 @@ evaluations per run. Offline runs ran as concurrent single-threaded processes on
 re-measured one at a time on the idle machine (415 game and 90 full-suite instances), no solver
 exceeded the budget on game instances, Greedy+LS took at most 0.8\,ms, and on the full suite only
 bit-flip SA (34\,\% of runs) and SQA (1\,\%) did. The replay covers one camp, three scripted
-strategies and the final build's tuning; no human playtest is reported.
+strategies and the final build's tuning; no human playtest is reported. Every benchmark but QAPLIB
+has interchangeable agents; squads with roles or weapons that make $F$ agent-dependent lose the
+node-only structure and approach a general QAP, where tabu search still leaves 7.5\,\% at 120\,ms.
 
 \section{Conclusion}
 
 Real-time NPC squad position assignment can be written as a QUBO, but at game scale it does not
 need quantum or quantum-inspired solvers. Classical tabu search is optimal in 99.9\,\% of in-game re-plans, and a millisecond of
 local search brings Greedy within 0.27\,\% of the optimum; we recommend it as the in-game fallback. Because only travel cost depends
-on the agent, the exact optimum of a game-size re-plan can be proven in about 0.1\,s by choosing a
-node set and solving an assignment. QIEA's accuracy is matched by PBIL without Q-bits, and QAOA, as
+on the agent, the exact optimum can be proven by choosing a node set and solving an assignment,
+within the budget for every recorded re-plan with up to six agents (93\,\% of them). QIEA's accuracy is matched by PBIL without Q-bits, and QAOA, as
 simulated here, does not beat uniform sampling of valid assignments. In play, the solver changed
 capture rates against some exploits but not consistently; a better optimum of a hand-weighted
 objective is not a stronger opponent by itself. Code, instances, tuning
