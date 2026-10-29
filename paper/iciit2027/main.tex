@@ -37,7 +37,8 @@ quantum and quantum-inspired solvers help within the 120\,ms a re-plan may take.
 recorded in play, 1{,}350 generated instances of up to 1{,}200 variables, Moving AI maps and QAPLIB,
 we compare ten solvers against exact references. Only travel cost depends on the agent, so the exact problem reduces to
 choosing a node set plus a Hungarian assignment, which proves the optimum of every recorded
-re-plan, within the 120\,ms budget for 94\,\% of them, every one with up to six agents included. Classical tabu search is optimal in 99.9\,\% of game runs, and one millisecond of local
+re-plan, solver-side within the 120\,ms budget for 94\,\% of re-plans, including all with up to six
+agents (93\,\%). Classical tabu search is optimal in 99.9\,\% of game runs, and one millisecond of local
 search after Greedy cuts its gap from 2.8\,\% to 0.27\,\%. The quantum-inspired QIEA is no more
 accurate than a genetic algorithm or than PBIL, its Q-bit-free ablation; bit-flip annealers (SA,
 SQA) trail Greedy; and simulated QAOA, read from the statevector, does not find the optimum more
@@ -145,7 +146,7 @@ symmetric block), ranks sets by $G(S)$ plus a lower bound on the assignment cost
 assignments in that order until the bound passes the incumbent. On the 3{,}447 recorded instances
 (one thread) it takes at most 99\,ms with up to six agents (median 54\,ms at six), a median of
 127 and 231\,ms with seven and eight (at most 0.72\,s), against 1--5\,s for our earlier branch
-and bound: an exact in-game solve would fit the budget in 94\,\% of re-plans. The structure
+and bound: solver-side, an exact in-game solve would fit the budget in 94\,\% of re-plans. The structure
 also bears on QAOA: the one-hot encoding needs $A|V|$ qubits although the hard part of the problem
 is the choice of $S$ over $|V|$ nodes (Section~\ref{sec:disc}).
 
@@ -361,7 +362,7 @@ Real-time NPC squad position assignment can be written as a QUBO, but at game sc
 need quantum or quantum-inspired solvers. Classical tabu search is optimal in 99.9\,\% of in-game re-plans, and a millisecond of
 local search brings Greedy within 0.27\,\% of the optimum; we recommend it as the in-game fallback. Because only travel cost depends
 on the agent, the exact optimum can be proven by choosing a node set and solving an assignment,
-within the budget for every recorded re-plan with up to six agents (93\,\% of them). QIEA's accuracy is matched by PBIL without Q-bits, and QAOA, as
+solver-side within the budget for 94\,\% of recorded re-plans, including all with up to six agents (93\,\%). QIEA's accuracy is matched by PBIL without Q-bits, and QAOA, as
 simulated here, does not beat uniform sampling of valid assignments. In play, the solver changed
 capture rates against some exploits but not consistently; a better optimum of a hand-weighted
 objective is not a stronger opponent by itself. Code, instances, tuning

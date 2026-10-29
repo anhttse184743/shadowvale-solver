@@ -175,6 +175,7 @@ def full_suite() -> None:
 def plot_full(table, lat) -> None:
     import matplotlib
     matplotlib.use("Agg")
+    matplotlib.rcParams["pdf.fonttype"] = 42   # TrueType, not Type 3: ACM camera-ready checks (review 29/10)
     import matplotlib.pyplot as plt
     figs = OUT / "figures"
     figs.mkdir(exist_ok=True)
@@ -282,6 +283,7 @@ def replay(paths: list[str]) -> None:
 def plot_replay(rows) -> None:
     import matplotlib
     matplotlib.use("Agg")
+    matplotlib.rcParams["pdf.fonttype"] = 42   # TrueType, not Type 3: ACM camera-ready checks (review 29/10)
     import matplotlib.pyplot as plt
     variants = [v for v in ["none", "greedy", "ls", "tabu", "ga", "sqa", "qiea"] if any(r["variant"] == v for r in rows)]
     bots = sorted({r["bot"] for r in rows})
